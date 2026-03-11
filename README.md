@@ -1,6 +1,5 @@
 # Creative Upaay - Task Dashboard
 
-A full-stack task management dashboard implementing all **Level 1** requirements of the Creative Upaay assignment, including the bonus Drag & Drop feature.
 
 ## Tech Stack
 
