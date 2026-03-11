@@ -20,14 +20,14 @@ export default function Header() {
     return (
         <header className="h-[90px] bg-white border-b border-[#DBDBDB] flex items-center justify-between px-12 sticky top-0 z-30">
             {/* Search */}
-            <div className="relative flex-1 max-w-[420px]">
-                <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#787486]" strokeWidth={1.5} />
+            <div className="relative flex-1 max-w-[417px]">
+                <HiOutlineMagnifyingGlass className="absolute left-[16px] top-1/2 -translate-y-1/2 w-[22px] h-[22px] text-[#787486]" strokeWidth={1.5} />
                 <input
                     type="text"
                     placeholder="Search for anything..."
                     value={search}
                     onChange={(e) => dispatch(setSearch(e.target.value))}
-                    className="w-full pl-12 pr-4 py-3 bg-[#F5F5F5] rounded-md text-[14px] text-[#0D062D] placeholder-[#787486] focus:outline-none transition-all border-none font-normal"
+                    className="w-full pl-[50px] pr-4 h-[44px] bg-[#F5F5F5] rounded-[6px] text-[14px] text-[#0D062D] placeholder-[#787486] focus:outline-none focus:ring-1 focus:ring-[#5030E5]/50 transition-all border-none font-normal"
                 />
             </div>
 
