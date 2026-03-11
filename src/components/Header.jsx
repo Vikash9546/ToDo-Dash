@@ -5,7 +5,7 @@ import { logout } from '../store/authSlice';
 import {
     HiOutlineMagnifyingGlass,
     HiOutlineCalendar,
-    HiOutlineChatBubbleOvalLeftEllipsis,
+    HiOutlineQuestionMarkCircle,
     HiOutlineBell,
     HiOutlineChevronDown,
     HiOutlineArrowRightOnRectangle
@@ -21,53 +21,53 @@ export default function Header() {
         <header className="h-[90px] bg-white border-b border-[#DBDBDB] flex items-center justify-between px-12 sticky top-0 z-30">
             {/* Search */}
             <div className="relative flex-1 max-w-[420px]">
-                <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#787486]" strokeWidth={2} />
+                <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#787486]" strokeWidth={1.5} />
                 <input
                     type="text"
                     placeholder="Search for anything..."
                     value={search}
                     onChange={(e) => dispatch(setSearch(e.target.value))}
-                    className="w-full pl-12 pr-4 py-3 bg-[#F5F5F5] rounded-md text-sm text-[#0D062D] placeholder-[#787486] focus:outline-none transition-all border-none font-normal"
+                    className="w-full pl-12 pr-4 py-3 bg-[#F5F5F5] rounded-md text-[14px] text-[#0D062D] placeholder-[#787486] focus:outline-none transition-all border-none font-normal"
                 />
             </div>
 
             {/* Right Section */}
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-[45px]">
                 {/* Icons */}
                 <div className="flex items-center gap-6">
                     <button className="relative text-[#787486] hover:text-[#0D062D] transition-colors">
                         <HiOutlineCalendar className="w-6 h-6" strokeWidth={1.5} />
                     </button>
                     <button className="relative text-[#787486] hover:text-[#0D062D] transition-colors">
-                        <HiOutlineChatBubbleOvalLeftEllipsis className="w-6 h-6" strokeWidth={1.5} />
+                        <HiOutlineQuestionMarkCircle className="w-6 h-6" strokeWidth={1.5} />
                     </button>
                     <button className="relative text-[#787486] hover:text-[#0D062D] transition-colors">
                         <HiOutlineBell className="w-6 h-6" strokeWidth={1.5} />
-                        <span className="absolute top-0 right-1 w-[6px] h-[6px] bg-[#D8727D] rounded-full" />
+                        <span className="absolute top-[2px] right-[2px] w-[6px] h-[6px] bg-[#D8727D] rounded-full" />
                     </button>
                 </div>
 
                 {/* User Profile */}
                 <div className="relative">
                     <button
-                        className="flex items-center gap-4 transition-all"
+                        className="flex items-center gap-5 transition-all"
                         onClick={() => setShowUserMenu(!showUserMenu)}
                     >
-                        <div className="text-right hidden sm:block">
-                            <p className="text-base font-normal text-[#0D062D] leading-tight">
+                        <div className="text-right hidden sm:block mt-2">
+                            <p className="text-[16px] font-medium text-[#0D062D] leading-[19px]">
                                 {user?.name || 'Palak Jain'}
                             </p>
-                            <p className="text-sm text-[#787486] leading-tight mt-1 font-normal">
+                            <p className="text-[14px] text-[#787486] leading-[17px] mt-1 font-normal">
                                 {user?.location || 'Rajasthan, India'}
                             </p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-[10px]">
                             <img
                                 src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop"
                                 alt="User Avatar"
-                                className="w-10 h-10 rounded-full object-cover"
+                                className="w-[38px] h-[38px] rounded-full object-cover"
                             />
-                            <HiOutlineChevronDown className="w-5 h-5 text-[#292D32]" strokeWidth={2} />
+                            <HiOutlineChevronDown className="w-[18px] h-[18px] text-[#292D32]" strokeWidth={2} />
                         </div>
                     </button>
 

@@ -22,24 +22,24 @@ export default function FilterBar() {
     const hasActiveFilters = filters.priority !== 'all' || filters.category !== 'all' || filters.dateRange !== 'all';
 
     const teamMembers = [
-        { id: '1', name: 'P', color: '#FCD64A', text: '#FFFFFF' }, // actually image shows real avatars mixed with initial. Let's make them initials with similar colors. P is yellow. Wait, image shows faces! Since I don't have face URLs easily, initials are ok, but let's change text color to match. Let's use image faces if I can find unsplash ones, or just initials.
-        { id: '2', name: 'V', color: '#FFA500', text: '#FFFFFF' },
-        { id: '3', name: 'R', color: '#76A5EA', text: '#FFFFFF' },
-        { id: '4', name: 'S', color: '#E55030', text: '#FFFFFF' },
+        { id: '1', name: 'User 1', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop' },
+        { id: '2', name: 'User 2', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=50&h=50&fit=crop' },
+        { id: '3', name: 'User 3', image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=50&h=50&fit=crop' },
+        { id: '4', name: 'User 4', image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=50&h=50&fit=crop' },
     ];
 
     return (
-        <div className="mb-8 mt-2">
+        <div className="mb-[40px] mt-2">
             {/* Project Title Row */}
-            <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-                <div className="flex items-center gap-4">
-                    <h1 className="text-[46px] font-semibold text-[#0D062D] leading-[56px] tracking-[-1px]">Mobile App</h1>
+            <div className="flex items-center justify-between mb-[40px] flex-wrap gap-4">
+                <div className="flex items-center gap-[17px]">
+                    <h1 className="text-[46px] font-semibold text-[#0D062D] leading-[56px]">Mobile App</h1>
                     <div className="flex items-center gap-3">
                         <button className="flex items-center justify-center w-[30px] h-[30px] bg-[#5030E5]/10 text-[#5030E5] rounded-md hover:bg-[#5030E5]/20 transition-colors">
-                            <HiOutlinePencil className="w-[18px] h-[18px]" strokeWidth={2} />
+                            <HiOutlinePencil className="w-[16px] h-[16px]" strokeWidth={2} />
                         </button>
                         <button className="flex items-center justify-center w-[30px] h-[30px] bg-[#5030E5]/10 text-[#5030E5] rounded-md hover:bg-[#5030E5]/20 transition-colors">
-                            <HiOutlineLink className="w-[18px] h-[18px]" strokeWidth={2} />
+                            <HiOutlineLink className="w-[16px] h-[16px]" strokeWidth={2} />
                         </button>
                     </div>
                 </div>
@@ -47,24 +47,24 @@ export default function FilterBar() {
                 <div className="flex items-center gap-4">
                     {/* Invite */}
                     <button className="flex items-center gap-2 px-1 py-2 text-[#5030E5] bg-transparent rounded-lg hover:underline transition-all font-medium text-[16px]">
-                        <div className="w-5 h-5 flex items-center justify-center bg-[#5030E5]/20 rounded-md">
+                        <div className="w-[18px] h-[18px] flex items-center justify-center bg-[#5030E5]/20 rounded-md">
                             <HiOutlinePlus className="w-3 h-3 text-[#5030E5]" strokeWidth={2.5} />
                         </div>
                         Invite
                     </button>
 
                     {/* Team Avatars */}
-                    <div className="flex -space-x-2 mr-2">
+                    <div className="flex -space-x-[8px] mr-2 ml-[8px]">
                         {teamMembers.map((member) => (
-                            <div
+                            <img
                                 key={member.id}
-                                className="w-[38px] h-[38px] rounded-full border-[2px] border-white flex items-center justify-center text-sm font-semibold shadow-sm cursor-pointer hover:scale-110 transition-transform relative z-0"
-                                style={{ backgroundColor: member.color, color: member.text, zIndex: 10 - member.id }}
-                            >
-                                {member.name}
-                            </div>
+                                src={member.image}
+                                alt={member.name}
+                                className="w-[38px] h-[38px] rounded-full border-[2px] border-white object-cover shadow-sm cursor-pointer hover:scale-110 transition-transform relative z-0"
+                                style={{ zIndex: 10 - member.id }}
+                            />
                         ))}
-                        <div className="w-[38px] h-[38px] rounded-full border-[2px] border-white bg-[#F4D7DA] flex items-center justify-center text-sm font-medium text-[#D8727D] shadow-sm relative z-0">
+                        <div className="w-[38px] h-[38px] rounded-full border-[2px] border-white bg-[#F4D7DA] flex items-center justify-center text-[15px] font-medium text-[#D8727D] shadow-sm relative z-0">
                             +2
                         </div>
                     </div>
