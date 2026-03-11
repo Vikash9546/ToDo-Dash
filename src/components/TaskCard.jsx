@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteTask, moveTask } from '../store/taskSlice';
 import {
-    HiOutlineChatBubbleLeftEllipsis,
-    HiOutlinePaperClip,
+    HiOutlineChatBubbleOvalLeftEllipsis,
+    HiOutlineFolder,
     HiOutlineEllipsisHorizontal,
     HiOutlineArrowRight,
     HiOutlineTrash,
@@ -14,10 +14,10 @@ import {
 import { isAfter, isBefore, addDays, parseISO, format } from 'date-fns';
 
 const priorityStyles = {
-    low: { bg: 'bg-orange-50', text: 'text-[#D58D49]', label: 'Low' },
-    medium: { bg: 'bg-yellow-50', text: 'text-[#F4C542]', label: 'Medium' },
-    high: { bg: 'bg-red-50', text: 'text-[#D8727D]', label: 'High' },
-    completed: { bg: 'bg-green-50', text: 'text-[#68B266]', label: 'Completed' }
+    low: { bg: 'bg-[#D58D49]/10', text: 'text-[#D58D49]', label: 'Low' },
+    medium: { bg: 'bg-[#F4C542]/10', text: 'text-[#F4C542]', label: 'Medium' },
+    high: { bg: 'bg-[#D8727D]/10', text: 'text-[#D8727D]', label: 'High' },
+    completed: { bg: 'bg-[#83C29D]/10', text: 'text-[#68B266]', label: 'Completed' }
 };
 
 const columnNames = {
@@ -34,10 +34,18 @@ const taskImages = {
     mobiledesign: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=200&fit=crop'
 };
 
+const imageFallbackColors = {
+    wireframe: 'from-purple-200 to-blue-200',
+    onboarding: 'from-orange-200 to-yellow-200',
+    moodboard: 'from-pink-200 to-purple-200',
+    mobiledesign: 'from-green-200 to-teal-200'
+};
+
 export default function TaskCard({ task, column, onEdit, provided }) {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const [showMenu, setShowMenu] = useState(false);
+    const [imageError, setImageError] = useState(false);
 
     const priority = priorityStyles[task.priority] || priorityStyles.medium;
 
@@ -88,21 +96,21 @@ export default function TaskCard({ task, column, onEdit, provided }) {
             ref={provided?.innerRef}
             {...(provided?.draggableProps || {})}
             {...(provided?.dragHandleProps || {})}
-            className={`bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-grab active:cursor-grabbing animate-fade-in group border border-gray-50 ${dueDateStatus === 'overdue' ? 'border-l-4 border-l-red-400' :
-                    dueDateStatus === 'warning' ? 'border-l-4 border-l-yellow-400' : ''
+            className={`bg-white rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200 cursor-grab active:cursor-grabbing animate-fade-in group border border-[#DFDFDF] ${dueDateStatus === 'overdue' ? 'border-2 border-red-200' :
+                    dueDateStatus === 'warning' ? 'border-2 border-yellow-200' : ''
                 }`}
         >
             {/* Top Row: Priority & Menu */}
             <div className="flex items-center justify-between mb-2">
-                <span className={`px-3 py-1 rounded-md text-xs font-medium ${priority.bg} ${priority.text}`}>
+                <span className={`px-2 py-1 rounded-[4px] text-[12px] font-medium ${priority.bg} ${priority.text}`}>
                     {priority.label}
                 </span>
                 <div className="relative">
                     <button
                         onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu); }}
-                        className="p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-all opacity-0 group-hover:opacity-100"
+                        className="p-1 rounded-sm text-[#0D062D] hover:bg-gray-50 transition-all font-bold"
                     >
-                        <HiOutlineEllipsisHorizontal className="w-5 h-5" />
+                        <HiOutlineEllipsisHorizontal className="w-5 h-5" strokeWidth={2} />
                     </button>
 
                     {/* Dropdown Menu */}
@@ -137,21 +145,28 @@ export default function TaskCard({ task, column, onEdit, provided }) {
 
             {/* Image */}
             {task.image && taskImages[task.image] && (
-                <div className="mb-3 rounded-xl overflow-hidden -mx-1">
-                    <img
-                        src={taskImages[task.image]}
-                        alt={task.title}
-                        className="w-full h-[130px] object-cover hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                    />
+                <div className="mb-4 rounded-xl overflow-hidden mt-1">
+                    {!imageError ? (
+                        <img
+                            src={taskImages[task.image]}
+                            alt={task.title}
+                            className="w-full h-[150px] object-cover hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                            onError={() => setImageError(true)}
+                        />
+                    ) : (
+                        <div className={`w-full h-[150px] bg-gradient-to-br ${imageFallbackColors[task.image] || 'from-gray-200 to-gray-300'} flex items-center justify-center`}>
+                            <span className="text-[#0D062D] text-sm font-medium">{task.title}</span>
+                        </div>
+                    )}
                 </div>
             )}
 
             {/* Title & Description */}
-            <h3 className="font-semibold text-base text-gray-900 mb-1 leading-snug">
+            <h3 className={`font-semibold text-lg text-[#0D062D] mb-1.5 leading-snug ${(!task.image) ? 'mt-2' : ''}`}>
                 {task.title}
             </h3>
-            <p className="text-xs text-gray-400 mb-3 line-clamp-2 leading-relaxed">
+            <p className="text-[12px] text-[#787486] mb-5 leading-relaxed font-normal">
                 {task.description}
             </p>
 
@@ -175,14 +190,14 @@ export default function TaskCard({ task, column, onEdit, provided }) {
                 </div>
             )}
 
-            {/* Subtask Progress */}
+            {/* Subtask Progress (if no main image/design requirement specifically, we can leave this matching my prev codebase, but adjusting colors) */}
             {subtaskProgress !== null && (
-                <div className="mb-3">
-                    <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+                <div className="mb-4">
+                    <div className="flex items-center justify-between text-xs text-[#787486] mb-1.5">
                         <span>Subtasks</span>
                         <span>{task.subtasks.filter(s => s.completed).length}/{task.subtasks.length}</span>
                     </div>
-                    <div className="w-full bg-gray-100 rounded-full h-1.5">
+                    <div className="w-full bg-[#E0E0E0] rounded-full h-1.5">
                         <div
                             className="bg-[#5030E5] h-1.5 rounded-full transition-all duration-500"
                             style={{ width: `${subtaskProgress}%` }}
@@ -192,13 +207,13 @@ export default function TaskCard({ task, column, onEdit, provided }) {
             )}
 
             {/* Footer: Assignees & Stats */}
-            <div className="flex items-center justify-between pt-2 border-t border-gray-50">
+            <div className="flex items-center justify-between pt-1">
                 {/* Assignees */}
-                <div className="flex -space-x-2">
+                <div className="flex -space-x-1.5">
                     {task.assignees?.slice(0, 4).map((assignee, idx) => (
                         <div
                             key={assignee.id || idx}
-                            className="w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-semibold text-white shadow-sm"
+                            className="w-6 h-6 rounded-full border border-white flex items-center justify-center text-[10px] font-semibold text-white shadow-sm ring-1 ring-white"
                             style={{ backgroundColor: assignee.color }}
                             title={assignee.name}
                         >
@@ -206,20 +221,20 @@ export default function TaskCard({ task, column, onEdit, provided }) {
                         </div>
                     ))}
                     {task.assignees?.length > 4 && (
-                        <div className="w-7 h-7 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-medium text-gray-500">
+                        <div className="w-6 h-6 rounded-full border border-white bg-[#F4D7DA] flex items-center justify-center text-[10px] font-medium text-[#D8727D] shadow-sm">
                             +{task.assignees.length - 4}
                         </div>
                     )}
                 </div>
 
                 {/* Comments & Files */}
-                <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1 text-xs text-gray-400">
-                        <HiOutlineChatBubbleLeftEllipsis className="w-4 h-4" />
+                <div className="flex items-center gap-4 text-[#787486] text-[12px] font-medium">
+                    <span className="flex items-center gap-1">
+                        <HiOutlineChatBubbleOvalLeftEllipsis className="w-[16px] h-[16px]" strokeWidth={2} />
                         {task.comments} comments
                     </span>
-                    <span className="flex items-center gap-1 text-xs text-gray-400">
-                        <HiOutlinePaperClip className="w-4 h-4" />
+                    <span className="flex items-center gap-1">
+                        <HiOutlineFolder className="w-[16px] h-[16px]" strokeWidth={2} />
                         {task.files} files
                     </span>
                 </div>

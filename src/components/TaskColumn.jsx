@@ -1,25 +1,22 @@
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 import TaskCard from './TaskCard';
-import { HiOutlinePlusSmall, HiOutlineEllipsisHorizontal } from 'react-icons/hi2';
+import { HiOutlinePlus } from 'react-icons/hi2';
 
 const columnConfig = {
     todo: {
         title: 'To Do',
         color: '#5030E5',
-        bgColor: '#F5F3FF',
-        lineClass: 'line-todo'
+        bgColor: '#F5F5F5' // All columns have the same grey background
     },
     inProgress: {
         title: 'On Progress',
         color: '#FFA500',
-        bgColor: '#FFF8E5',
-        lineClass: 'line-progress'
+        bgColor: '#F5F5F5'
     },
     done: {
         title: 'Done',
         color: '#8BC48A',
-        bgColor: '#F0FFF0',
-        lineClass: 'line-done'
+        bgColor: '#F5F5F5'
     }
 };
 
@@ -27,38 +24,39 @@ export default function TaskColumn({ columnId, tasks, onAddTask, onEditTask }) {
     const config = columnConfig[columnId];
 
     return (
-        <div className="min-w-0 flex flex-col overflow-hidden">
+        <div className="min-w-0 flex flex-col overflow-hidden bg-[#F5F5F5] rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl rounded-br-2xl p-5 pb-6">
             {/* Column Header */}
-            <div className={`rounded-xl p-0.5`} style={{ borderTop: `3px solid ${config.color}` }}>
-                <div className="bg-white rounded-b-xl p-3">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <span
-                                className="w-2 h-2 rounded-full"
-                                style={{ backgroundColor: config.color }}
-                            />
-                            <h3 className="font-medium text-base text-gray-800">
-                                {config.title}
-                            </h3>
-                            <span className="bg-gray-100 text-gray-500 text-xs font-medium px-2 py-0.5 rounded-full">
-                                {tasks.length}
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                            {columnId !== 'done' && (
-                                <button
-                                    onClick={onAddTask}
-                                    className="p-1.5 rounded-lg hover:bg-gray-50 transition-colors"
-                                    style={{ color: config.color }}
-                                    title="Add task"
-                                >
-                                    <HiOutlinePlusSmall className="w-5 h-5" />
-                                </button>
-                            )}
-                        </div>
-                    </div>
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                    <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: config.color }}
+                    />
+                    <h3 className="font-medium text-[16px] text-[#0D062D]">
+                        {config.title}
+                    </h3>
+                    <span className="bg-[#E0E0E0]/50 text-[#625F6D] text-xs font-medium w-5 h-5 flex items-center justify-center rounded-full ml-1">
+                        {tasks.length}
+                    </span>
+                </div>
+                <div className="flex items-center gap-1">
+                    {columnId === 'todo' && (
+                        <button
+                            onClick={onAddTask}
+                            className="w-6 h-6 flex items-center justify-center rounded-md bg-[#5030E5]/10 hover:bg-[#5030E5]/20 transition-colors"
+                            title="Add task"
+                        >
+                            <HiOutlinePlus className="w-4 h-4 text-[#5030E5]" strokeWidth={2} />
+                        </button>
+                    )}
                 </div>
             </div>
+
+            {/* Colored Underline */}
+            <div
+                className="w-full h-[3px] rounded-full mb-5"
+                style={{ backgroundColor: config.color }}
+            />
 
             {/* Task List - Droppable */}
             <Droppable droppableId={columnId}>
@@ -66,7 +64,7 @@ export default function TaskColumn({ columnId, tasks, onAddTask, onEditTask }) {
                     <div
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        className={`flex-1 mt-3 space-y-3 min-h-[200px] p-1 rounded-xl transition-colors duration-200 ${snapshot.isDraggingOver ? 'column-drag-over bg-gray-50' : ''
+                        className={`flex-1 space-y-4 min-h-[500px] transition-colors duration-200 ${snapshot.isDraggingOver ? 'column-drag-over rounded-xl' : ''
                             }`}
                     >
                         {tasks.map((task, index) => (
@@ -90,13 +88,7 @@ export default function TaskColumn({ columnId, tasks, onAddTask, onEditTask }) {
                         {/* Empty State */}
                         {tasks.length === 0 && !snapshot.isDraggingOver && (
                             <div className="flex flex-col items-center justify-center py-12 text-center">
-                                <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center mb-3">
-                                    <span className="text-2xl">📋</span>
-                                </div>
                                 <p className="text-sm text-gray-400 mb-1">No tasks yet</p>
-                                <p className="text-xs text-gray-300">
-                                    {columnId !== 'done' ? 'Click + to add a task' : 'Complete tasks to see them here'}
-                                </p>
                             </div>
                         )}
                     </div>
