@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setSearch } from '../store/filterSlice';
 import { logout } from '../store/authSlice';
 import {
-    HiOutlineMagnifyingGlass,
     HiOutlineCalendar,
     HiOutlineQuestionMarkCircle,
     HiOutlineBell,
@@ -21,7 +20,12 @@ export default function Header() {
         <header className="h-[90px] bg-white border-b border-[#DBDBDB] flex items-center justify-between px-12 sticky top-0 z-30">
             {/* Search */}
             <div className="relative flex-1 max-w-[417px]">
-                <HiOutlineMagnifyingGlass className="absolute left-[16px] top-1/2 -translate-y-1/2 w-[22px] h-[22px] text-[#787486]" strokeWidth={1.5} />
+                <div className="absolute left-[1px] top-1/2 -translate-y-1/2 text-[#787486] pointer-events-none">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        {/* <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" strokeWidth="1.2" /> */}
+                        {/* <path d="M18.5 18.5L22 22" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" /> */}
+                    </svg>
+                </div>
                 <input
                     type="text"
                     placeholder="Search for anything..."
