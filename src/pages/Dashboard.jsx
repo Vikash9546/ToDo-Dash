@@ -119,8 +119,8 @@ export default function Dashboard() {
 
             {/* Main Content */}
             <div
-                className={`flex-1 flex flex-col transition-all duration-300 ${sidebarCollapsed ? 'ml-[70px]' : 'ml-[252px]'
-                    }`}
+                className="flex-1 flex flex-col transition-all duration-300 min-w-0"
+                style={{ marginLeft: sidebarCollapsed ? '70px' : '252px' }}
             >
                 <Header />
 
@@ -129,7 +129,7 @@ export default function Dashboard() {
 
                     {/* Task Columns */}
                     <DragDropContext onDragEnd={onDragEnd}>
-                        <div className="flex gap-5 overflow-x-auto pb-4">
+                        <div className="grid grid-cols-3 gap-5 pb-4">
                             <TaskColumn
                                 columnId="todo"
                                 tasks={filteredColumns.todo}

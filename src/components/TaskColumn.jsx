@@ -27,7 +27,7 @@ export default function TaskColumn({ columnId, tasks, onAddTask, onEditTask }) {
     const config = columnConfig[columnId];
 
     return (
-        <div className="flex-1 min-w-[300px] flex flex-col">
+        <div className="min-w-0 flex flex-col overflow-hidden">
             {/* Column Header */}
             <div className={`rounded-xl p-0.5`} style={{ borderTop: `3px solid ${config.color}` }}>
                 <div className="bg-white rounded-b-xl p-3">
