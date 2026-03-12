@@ -1,7 +1,8 @@
-import { useRef } from 'react';
-import { Provider, useSelector } from 'react-redux';
+import { useRef, useEffect } from 'react';
+import { Provider, useSelector, useDispatch } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './store';
+import { validateSession } from './store/authSlice';
 import Login from './components/Login';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -52,7 +53,20 @@ function Dashboard() {
 }
 
 function AppContent() {
-  const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
+  const dispatch = useDispatch();
+  const { isAuthenticated, isValidating } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(validateSession());
+  }, [dispatch]);
+
+  if (isValidating) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-[#f8f7ff] text-slate-500">
+        Validating session...
+      </div>
+    );
+  }
 
   if (!isAuthenticated) return <Login />;
   return <Dashboard />;

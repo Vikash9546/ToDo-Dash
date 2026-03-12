@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { login } from '../store/authSlice';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAsync, clearError } from '../store/authSlice';
 import Logo from './Logo';
 import { EyeIcon, EyeOffIcon } from './Icons';
 
@@ -9,23 +9,21 @@ const DEMO_PASSWORD = 'password123';
 
 export default function Login() {
   const dispatch = useDispatch();
+  const { isLoading, error: authError } = useSelector((state) => state.auth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (authError) setError(authError);
+  }, [authError]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 600));
-    if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
-      dispatch(login({ email, name: 'Palak Jain' }));
-    } else {
-      setError('Invalid email or password. Use demo credentials.');
-      setIsLoading(false);
-    }
+    dispatch(clearError());
+    dispatch(loginAsync({ email, password }));
   };
 
   const fillDemo = () => {

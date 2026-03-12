@@ -43,7 +43,7 @@ export default function Header() {
               <div className="fixed inset-0 z-10" onClick={() => setShowCalendar(false)} />
               <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 p-4 z-20 max-h-80 overflow-y-auto">
                 <p className="text-sm font-medium text-gray-800 mb-2">Calendar</p>
-                <p className="text-sm text-gray-500">Quick date picker coming soon.</p>
+                {/* <p className="text-sm text-gray-500">Quick date picker coming soon.</p> */}
                 <input
                   type="date"
                   className="mt-2 w-full px-2 py-1 border rounded text-sm"

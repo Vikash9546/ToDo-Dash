@@ -98,9 +98,9 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     addTask: (state, action) => {
-      const { title, description, status, priority = 'low' } = action.payload;
+      const { id, title, description, status, priority = 'low' } = action.payload;
       state.tasks.push({
-        id: generateId(),
+        id: id || generateId(),
         title,
         description,
         status,
@@ -130,10 +130,13 @@ const tasksSlice = createSlice({
     setFilter: (state, action) => {
       state.filter = { ...state.filter, ...action.payload };
     },
+    replaceTasks: (state, action) => {
+      state.tasks = action.payload;
+    },
   },
 });
 
-export const { addTask, moveTask, updateTask, deleteTask, setFilter } = tasksSlice.actions;
+export const { addTask, moveTask, updateTask, deleteTask, setFilter, replaceTasks } = tasksSlice.actions;
 
 const selectTasksState = (state) => state.tasks;
 
