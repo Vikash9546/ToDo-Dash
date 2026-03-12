@@ -11,6 +11,7 @@ import { moveTask, setFilter } from '../store/tasksSlice';
 import { setViewMode } from '../store/uiSlice';
 import TaskColumn from './TaskColumn';
 import InviteModal from './InviteModal';
+import { PaperclipIcon, LinkIcon, CalendarIcon, FilterIcon, ChevronDownIcon } from './Icons';
 
 export default function KanbanBoard() {
   const dispatch = useDispatch();
@@ -59,50 +60,42 @@ export default function KanbanBoard() {
           <h1 className="text-2xl font-bold text-gray-900">{activeProject}</h1>
           <button
             onClick={() => setShowAttachments(!showAttachments)}
-            className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+            className="p-1.5 text-purple-400 hover:text-purple-600 rounded-md hover:bg-purple-50 transition-colors"
             title="Attachments"
           >
-            📎
+            <PaperclipIcon className="w-5 h-5" />
           </button>
           <button
             onClick={copyLink}
-            className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded"
+            className="p-1.5 text-purple-400 hover:text-purple-600 rounded-md hover:bg-purple-50 transition-colors"
             title="Copy link"
           >
-            🔗
+            <LinkIcon className="w-5 h-5" />
           </button>
         </div>
-        <div className="flex items-center gap-2">
-          {/* Invite - purple + and text, no border */}
+        <div className="flex items-center gap-3">
+          {/* Invite */}
           <button
             onClick={() => setShowInvite(true)}
-            className="flex items-center gap-1.5 text-purple-600 font-medium text-sm hover:text-purple-700"
+            className="flex items-center gap-1.5 text-purple-600 font-medium text-sm hover:text-purple-700 transition-colors"
           >
-            <span className="flex items-center justify-center w-5 h-5 text-lg leading-none">+</span>
+            <span className="flex items-center justify-center w-5 h-5 rounded-full border-2 border-purple-600 text-xs font-bold leading-none">+</span>
             Invite
           </button>
-          {/* Avatars - stacked with varied background colors */}
-          <div className="flex -space-x-2 ml-1">
-            <div className="w-8 h-8 rounded-full bg-[#facc15] border-2 border-white flex items-center justify-center text-xs font-medium text-amber-900">
-              A
-            </div>
-            <div className="w-8 h-8 rounded-full bg-[#fde047] border-2 border-white flex items-center justify-center text-xs font-medium text-amber-900">
-              B
-            </div>
-            <div className="w-8 h-8 rounded-full bg-[#93c5fd] border-2 border-white flex items-center justify-center text-xs font-medium text-sky-800">
-              C
-            </div>
-            <div className="w-8 h-8 rounded-full bg-[#f5e6d3] border-2 border-white flex items-center justify-center text-xs font-medium text-amber-800">
-              D
-            </div>
-            <div className="w-8 h-8 rounded-full bg-[#fbcfe8] border-2 border-white flex items-center justify-center text-xs font-semibold text-pink-600">
+          {/* Avatars - stacked with real photos */}
+          <div className="flex -space-x-2.5 ml-1">
+            <img src="/avatars/avatar1.png" alt="Team member" className="w-9 h-9 rounded-full border-2 border-white object-cover" />
+            <img src="/avatars/avatar2.png" alt="Team member" className="w-9 h-9 rounded-full border-2 border-white object-cover" />
+            <img src="/avatars/avatar3.png" alt="Team member" className="w-9 h-9 rounded-full border-2 border-white object-cover" />
+            <img src="/avatars/avatar4.png" alt="Team member" className="w-9 h-9 rounded-full border-2 border-white object-cover" />
+            <div className="w-9 h-9 rounded-full bg-[#fce7f3] border-2 border-white flex items-center justify-center text-xs font-semibold text-pink-600">
               +2
             </div>
           </div>
-          {/* Share - white button with grey border and share icon */}
+          {/* Share */}
           <button
             onClick={copyLink}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg bg-white hover:bg-gray-50 ml-2"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg bg-white hover:bg-gray-50 transition-colors"
           >
             <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -113,11 +106,11 @@ export default function KanbanBoard() {
             {copied ? 'Copied!' : 'Share'}
           </button>
           {/* Vertical separator */}
-          <div className="w-px h-6 bg-gray-200 mx-1" />
+          <div className="w-px h-7 bg-gray-200" />
           {/* List view - solid purple square */}
           <button
             onClick={() => dispatch(setViewMode('kanban'))}
-            className={`w-9 h-9 flex items-center justify-center rounded-lg ${viewMode === 'kanban' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
+            className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors ${viewMode === 'kanban' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
             title="List view"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -125,17 +118,17 @@ export default function KanbanBoard() {
               <line x1="5" y1="16" x2="19" y2="16" />
             </svg>
           </button>
-          {/* Grid view - 4 dots */}
+          {/* Grid view - 4 squares */}
           <button
             onClick={() => dispatch(setViewMode('grid'))}
-            className={`w-9 h-9 flex items-center justify-center rounded-lg ${viewMode === 'grid' ? 'bg-purple-50 text-purple-600' : 'text-gray-400 hover:bg-gray-100'}`}
+            className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-purple-50 text-purple-600' : 'text-gray-400 hover:bg-gray-100'}`}
             title="Grid view"
           >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="6" cy="6" r="2" />
-              <circle cx="18" cy="6" r="2" />
-              <circle cx="6" cy="18" r="2" />
-              <circle cx="18" cy="18" r="2" />
+            <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <rect x="1" y="1" width="6" height="6" rx="1.5" />
+              <rect x="11" y="1" width="6" height="6" rx="1.5" />
+              <rect x="1" y="11" width="6" height="6" rx="1.5" />
+              <rect x="11" y="11" width="6" height="6" rx="1.5" />
             </svg>
           </button>
         </div>
@@ -148,7 +141,7 @@ export default function KanbanBoard() {
             onClick={() => setShowFilterMenu(!showFilterMenu)}
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
           >
-            <span>▾</span> Filter
+            <FilterIcon className="w-4 h-4" /> Filter <ChevronDownIcon className="w-3.5 h-3.5 text-gray-400" />
           </button>
           {showFilterMenu && (
             <>
@@ -186,7 +179,7 @@ export default function KanbanBoard() {
               : 'border-gray-300 text-gray-700 hover:bg-gray-50'
           }`}
         >
-          <span>📅</span> Today
+          <CalendarIcon className="w-4 h-4" /> Today <ChevronDownIcon className="w-3.5 h-3.5 text-gray-400" />
         </button>
       </div>
 

@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Logo from './Logo';
+import { GridIcon, MessageCircleIcon, ClipboardListIcon, UsersIcon, SettingsIcon, LightbulbIcon, ChevronLeftIcon, ChevronRightIcon, DotsVerticalIcon } from './Icons';
 import { setActiveNav, setActiveProject } from '../store/uiSlice';
 import AddProjectModal from './AddProjectModal';
 import WriteMessageModal from './WriteMessageModal';
 
 const navItems = [
-  { icon: '⊞', label: 'Home' },
-  { icon: '💬', label: 'Messages' },
-  { icon: '☑', label: 'Tasks' },
-  { icon: '👥', label: 'Members' },
-  { icon: '⚙', label: 'Settings' },
+  { icon: GridIcon, label: 'Home' },
+  { icon: MessageCircleIcon, label: 'Messages' },
+  { icon: ClipboardListIcon, label: 'Tasks' },
+  { icon: UsersIcon, label: 'Members' },
+  { icon: SettingsIcon, label: 'Settings' },
 ];
 
 const projectColors = {
@@ -45,26 +46,30 @@ export default function Sidebar() {
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="p-1 hover:bg-gray-100 rounded text-gray-500"
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {collapsed ? '›' : '‹'}
+          {collapsed ? <ChevronRightIcon className="w-4 h-4" /> : <ChevronLeftIcon className="w-4 h-4" />}
         </button>
       </div>
 
       <nav className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-3 scroll-smooth">
-        {navItems.map((item) => (
-          <button
-            key={item.label}
-            onClick={() => dispatch(setActiveNav(item.label))}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg mb-1 text-left ${
-              activeNav === item.label
-                ? 'bg-purple-50 text-purple-600 font-medium'
-                : 'text-gray-600 hover:bg-gray-50'
-            }`}
-          >
-            <span className="text-lg w-5 text-center">{item.icon}</span>
-            {!collapsed && <span>{item.label}</span>}
-          </button>
-        ))}
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.label}
+              onClick={() => dispatch(setActiveNav(item.label))}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg mb-1 text-left ${
+                activeNav === item.label
+                  ? 'bg-purple-50 text-purple-600 font-medium'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <span className="w-5 flex items-center justify-center shrink-0"><Icon className="w-5 h-5" /></span>
+              {!collapsed && <span>{item.label}</span>}
+            </button>
+          );
+        })}
 
         <div className="mt-6">
           <div className="flex items-center justify-between px-3 mb-2">
@@ -95,7 +100,7 @@ export default function Sidebar() {
               {!collapsed && (
                 <>
                   <span className="flex-1 truncate">{name}</span>
-                  <span className="text-gray-400">⋯</span>
+                  <DotsVerticalIcon className="w-4 h-4 text-gray-400 shrink-0" />
                 </>
               )}
             </button>
@@ -107,7 +112,7 @@ export default function Sidebar() {
         <div className="p-3 border-t border-gray-100">
           <div className="bg-gray-50 rounded-xl p-4">
             <div className="flex gap-2 mb-2">
-              <span className="text-lg">💡</span>
+              <LightbulbIcon className="w-5 h-5 shrink-0 text-amber-500" />
               <p className="text-sm text-gray-600">
                 We don't have any notice for you, till then you can share your thoughts with your
                 peers.

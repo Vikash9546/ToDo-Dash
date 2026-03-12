@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const generateId = () => Math.random().toString(36).slice(2, 11);
 
@@ -135,8 +135,9 @@ const tasksSlice = createSlice({
 
 export const { addTask, moveTask, updateTask, deleteTask, setFilter } = tasksSlice.actions;
 
-export const selectFilteredTasks = (state) => {
-  const { tasks, filter } = state.tasks;
+const selectTasksState = (state) => state.tasks;
+
+export const selectFilteredTasks = createSelector([selectTasksState], ({ tasks, filter }) => {
   let filtered = [...tasks];
   if (filter.priority) {
     filtered = filtered.filter((t) => t.priority === filter.priority);
@@ -155,11 +156,11 @@ export const selectFilteredTasks = (state) => {
     filtered = filtered.filter((t) => !t.dueDate || t.dueDate === targetDate);
   }
   return filtered;
-};
+});
 
-export const selectTasksByStatus = (state, status) => {
-  const filtered = selectFilteredTasks(state);
-  return filtered.filter((t) => t.status === status);
-};
+export const selectTasksByStatus = createSelector(
+  [selectFilteredTasks, (_, status) => status],
+  (filteredTasks, status) => filteredTasks.filter((t) => t.status === status)
+);
 
 export default tasksSlice.reducer;

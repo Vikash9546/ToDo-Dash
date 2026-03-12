@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
 import Logo from './Logo';
+import { EyeIcon, EyeOffIcon } from './Icons';
 
 const DEMO_EMAIL = 'palak@example.com';
 const DEMO_PASSWORD = 'password123';
@@ -106,7 +107,7 @@ export default function Login() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? '🙈' : '👁'}
+                  {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
                 </button>
               </div>
             </div>

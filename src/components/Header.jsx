@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { SearchIcon, CalendarIcon, BellIcon, ChevronDownIcon } from './Icons';
 import { setFilter } from '../store/tasksSlice';
 import { logout } from '../store/authSlice';
 import { markNotificationRead } from '../store/uiSlice';
@@ -18,7 +19,7 @@ export default function Header() {
     <header className="h-16 flex items-center justify-between px-6 bg-white border-b border-gray-100">
       <div className="flex-1 max-w-xl">
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><SearchIcon className="w-4 h-4" /></span>
           <input
             type="text"
             placeholder="Search for anything..."
@@ -35,7 +36,7 @@ export default function Header() {
             className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg"
             title="Calendar"
           >
-            📅
+            <CalendarIcon className="w-5 h-5" />
           </button>
           {showCalendar && (
             <>
@@ -82,9 +83,9 @@ export default function Header() {
           <button
             onClick={() => { setShowNotifications(!showNotifications); setShowCalendar(false); setShowHelp(false); }}
             className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg relative"
-            title="Notifications"
+title="Notifications"
           >
-          🔔
+            <BellIcon className="w-5 h-5" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
           </button>
           {showNotifications && (
@@ -122,7 +123,7 @@ export default function Header() {
             <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-medium">
               {user?.name?.split(' ').map(n => n[0]).join('') || 'PJ'}
             </div>
-            <span className="text-gray-400 text-sm">▼</span>
+            <span className="text-gray-400"><ChevronDownIcon className="w-4 h-4" /></span>
           </button>
           {showProfileMenu && (
             <>

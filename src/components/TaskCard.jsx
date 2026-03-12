@@ -1,4 +1,5 @@
 import { useDraggable } from '@dnd-kit/core';
+import { MessageIcon, PaperclipIcon, DotsVerticalIcon } from './Icons';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { deleteTask } from '../store/tasksSlice';
@@ -41,7 +42,7 @@ export default function TaskCard({ task }) {
             }}
             className="p-1 text-gray-400 hover:text-gray-600"
           >
-            ⋯
+            <DotsVerticalIcon className="w-5 h-5" />
           </button>
           {showMenu && (
             <>
@@ -78,8 +79,8 @@ export default function TaskCard({ task }) {
           ))}
         </div>
         <div className="flex items-center gap-3 text-xs text-gray-500">
-          <span>💬 {task.commentsCount} comments</span>
-          <span>📎 {task.filesCount} files</span>
+          <span className="flex items-center gap-1"><MessageIcon className="w-4 h-4" /> {task.commentsCount} comments</span>
+          <span className="flex items-center gap-1"><PaperclipIcon className="w-4 h-4" /> {task.filesCount} files</span>
         </div>
       </div>
     </div>
