@@ -2,7 +2,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { MessageIcon, PaperclipIcon, DotsVerticalIcon } from './Icons';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { deleteTask } from '../store/tasksSlice';
+import { deleteTask, moveTask } from '../store/tasksSlice';
 
 const priorityStyles = {
   low: 'bg-[#DFA874]/20 text-[#D58D49]',
@@ -54,7 +54,32 @@ export default function TaskCard({ task }) {
                 className="fixed inset-0 z-10"
                 onClick={() => setShowMenu(false)}
               />
-              <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20 min-w-[120px]">
+              <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20 min-w-[160px]">
+                {task.status !== 'todo' && (
+                  <button
+                    onClick={() => {
+                      const prevStatus = task.status === 'done' ? 'inProgress' : 'todo';
+                      dispatch(moveTask({ taskId: task.id, newStatus: prevStatus }));
+                      setShowMenu(false);
+                    }}
+                    className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    Move to {task.status === 'done' ? 'On Progress' : 'To Do'}
+                  </button>
+                )}
+                {task.status !== 'done' && (
+                  <button
+                    onClick={() => {
+                      const nextStatus = task.status === 'todo' ? 'inProgress' : 'done';
+                      dispatch(moveTask({ taskId: task.id, newStatus: nextStatus }));
+                      setShowMenu(false);
+                    }}
+                    className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    Move to {task.status === 'todo' ? 'On Progress' : 'Done'}
+                  </button>
+                )}
+                <div className="h-px bg-gray-100 my-1" />
                 <button
                   onClick={() => {
                     dispatch(deleteTask(task.id));
