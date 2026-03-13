@@ -7,9 +7,10 @@ import {
   pointerWithin,
 } from '@dnd-kit/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { moveTask, setFilter } from '../store/tasksSlice';
+import { moveTask, setFilter, selectFilteredTasks } from '../store/tasksSlice';
 import { setViewMode } from '../store/uiSlice';
 import TaskColumn from './TaskColumn';
+import TaskCard from './TaskCard';
 import InviteModal from './InviteModal';
 import { PaperclipIcon, LinkIcon, CalendarIcon, FilterIcon, ChevronDownIcon } from './Icons';
 
@@ -18,6 +19,7 @@ export default function KanbanBoard() {
   const filter = useSelector((state) => state.tasks.filter);
   const viewMode = useSelector((state) => state.ui?.viewMode) || 'kanban';
   const activeProject = useSelector((state) => state.ui?.activeProject) || 'Mobile App';
+  const allTasks = useSelector(selectFilteredTasks);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [showInvite, setShowInvite] = useState(false);
   const [showAttachments, setShowAttachments] = useState(false);
@@ -183,18 +185,31 @@ export default function KanbanBoard() {
         </button>
       </div>
 
-      {/* Kanban columns - horizontal scroll */}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={pointerWithin}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="flex gap-[30px] overflow-x-auto overflow-y-hidden pb-4 scroll-smooth items-stretch min-h-[calc(100vh-12rem)]">
-          <TaskColumn status="todo" />
-          <TaskColumn status="inProgress" />
-          <TaskColumn status="done" />
+      {/* Kanban columns vs Grid View */}
+      {viewMode === 'kanban' ? (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={pointerWithin}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="flex gap-[30px] overflow-x-auto overflow-y-hidden pb-4 scroll-smooth items-stretch min-h-[calc(100vh-12rem)]">
+            <TaskColumn status="todo" />
+            <TaskColumn status="inProgress" />
+            <TaskColumn status="done" />
+          </div>
+        </DndContext>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-4 overflow-y-auto content-start min-h-[calc(100vh-12rem)]">
+          {allTasks.map(task => (
+            <div key={task.id} className="h-fit">
+              <TaskCard task={task} />
+            </div>
+          ))}
+          {allTasks.length === 0 && (
+            <p className="text-gray-500 col-span-full mt-10 text-center text-sm">No tasks found in this project.</p>
+          )}
         </div>
-      </DndContext>
+      )}
 
       {showAttachments && (
         <>
