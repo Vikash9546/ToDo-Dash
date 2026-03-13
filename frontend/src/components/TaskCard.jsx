@@ -1,5 +1,5 @@
 import { useDraggable } from '@dnd-kit/core';
-import { MessageIcon, PaperclipIcon, DotsVerticalIcon } from './Icons';
+import { MessageIcon, PaperclipIcon, DotsVerticalIcon, CalendarIcon } from './Icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { deleteTask, moveTask } from '../store/tasksSlice';
@@ -8,6 +8,14 @@ const priorityStyles = {
   low: 'bg-[#DFA874]/20 text-[#D58D49]',
   high: 'bg-[#D8727D]/10 text-[#D8727D]',
   completed: 'bg-[#83C29D]/20 text-[#68B266]',
+};
+
+const getDueDateStyle = (date) => {
+  if (!date) return null;
+  const today = new Date().toISOString().slice(0, 10);
+  if (date < today) return { label: `Overdue: ${date}`, classes: 'bg-red-100 text-red-600 border border-red-200' };
+  if (date === today) return { label: 'Due Today', classes: 'bg-orange-100 text-orange-600 border border-orange-200' };
+  return { label: `Due: ${date}`, classes: 'bg-gray-100 text-gray-500 border border-gray-200' };
 };
 
 export default function TaskCard({ task, isOverlay }) {
@@ -45,6 +53,12 @@ export default function TaskCard({ task, isOverlay }) {
           {viewMode === 'grid' && (
             <span className="text-[12px] font-medium px-2 py-1 rounded-md shrink-0 bg-gray-100 text-gray-600">
               {task.status === 'todo' ? 'To Do' : task.status === 'inProgress' ? 'On Progress' : 'Done'}
+            </span>
+          )}
+          {task.dueDate && task.status !== 'done' && (
+            <span className={`text-[11px] font-semibold px-2 py-1 rounded-md shrink-0 flex items-center gap-1 ${getDueDateStyle(task.dueDate).classes}`}>
+              <CalendarIcon className="w-3 h-3" />
+              {getDueDateStyle(task.dueDate).label}
             </span>
           )}
         </div>

@@ -19,15 +19,17 @@ export default function AddTaskModal({ isOpen, onClose, defaultStatus }) {
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState(defaultStatus || 'todo');
   const [priority, setPriority] = useState('low');
+  const [dueDate, setDueDate] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title.trim()) return;
-    dispatch(addTask({ title: title.trim(), description: description.trim(), status, priority }));
+    dispatch(addTask({ title: title.trim(), description: description.trim(), status, priority, dueDate: dueDate || null }));
     setTitle('');
     setDescription('');
     setStatus(defaultStatus || 'todo');
     setPriority('low');
+    setDueDate('');
     onClose();
   };
 
@@ -91,6 +93,15 @@ export default function AddTaskModal({ isOpen, onClose, defaultStatus }) {
                 ))}
               </select>
             </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
           </div>
           <div className="flex gap-2 pt-2">
             <button

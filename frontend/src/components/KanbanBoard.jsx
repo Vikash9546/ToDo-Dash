@@ -28,6 +28,9 @@ export default function KanbanBoard() {
   const [activeId, setActiveId] = useState(null);
   const activeTask = allTasks.find(t => t.id === activeId);
 
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const dueSoonTasks = allTasks.filter(t => t.dueDate && t.status !== 'done' && t.dueDate <= todayStr);
+
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
@@ -111,6 +114,30 @@ export default function KanbanBoard() {
           </div>
         </div>
       </div>
+
+      {/* Due Tasks Alert Banner */}
+      {dueSoonTasks.length > 0 && (
+        <div className="flex-shrink-0 bg-red-50/80 border border-red-200/60 rounded-xl p-4 mb-2 flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+              <CalendarIcon className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-red-800">Reminder: {dueSoonTasks.length} tasks require your attention!</p>
+              <p className="text-xs text-red-600/80 mt-0.5">You have tasks that are near or past their due date.</p>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              dispatch(setFilter({ dateFilter: 'today' }));
+              dispatch(setViewMode('grid'));
+            }}
+            className="text-xs font-semibold bg-white border border-red-200 text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors shadow-sm"
+          >
+            Review Tasks
+          </button>
+        </div>
+      )}
 
       {/* Second Row: Filters and Views */}
       <div className="flex-shrink-0 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 mt-6">

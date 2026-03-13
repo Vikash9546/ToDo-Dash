@@ -24,6 +24,7 @@ const initialState = {
       assignees: 2,
       commentsCount: 10,
       filesCount: 3,
+      dueDate: new Date(Date.now() - 86400000).toISOString().slice(0, 10), // Yesterday (past due)
     },
     {
       id: '3',
@@ -34,6 +35,7 @@ const initialState = {
       assignees: 3,
       commentsCount: 12,
       filesCount: 0,
+      dueDate: new Date().toISOString().slice(0, 10), // Today (due today)
     },
     {
       id: '4',
@@ -98,7 +100,7 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     addTask: (state, action) => {
-      const { id, title, description, status, priority = 'low' } = action.payload;
+      const { id, title, description, status, priority = 'low', dueDate = null } = action.payload;
       state.tasks.push({
         id: id || generateId(),
         title,
@@ -108,7 +110,7 @@ const tasksSlice = createSlice({
         assignees: 2,
         commentsCount: 0,
         filesCount: 0,
-        dueDate: null,
+        dueDate,
       });
     },
     moveTask: (state, action) => {
