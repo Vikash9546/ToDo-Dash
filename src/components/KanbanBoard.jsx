@@ -189,7 +189,7 @@ export default function KanbanBoard() {
         collisionDetection={pointerWithin}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex gap-6 overflow-x-auto overflow-y-hidden pb-4 scroll-smooth items-stretch min-h-[calc(100vh-12rem)]">
+        <div className="flex gap-[30px] overflow-x-auto overflow-y-hidden pb-4 scroll-smooth items-stretch min-h-[calc(100vh-12rem)]">
           <TaskColumn status="todo" />
           <TaskColumn status="inProgress" />
           <TaskColumn status="done" />

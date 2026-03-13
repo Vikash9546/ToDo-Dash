@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Logo from './Logo';
-import { GridIcon, MessageCircleIcon, ClipboardListIcon, UsersIcon, SettingsIcon, LightbulbIcon, ChevronLeftIcon, ChevronRightIcon, DotsVerticalIcon } from './Icons';
+import { GridIcon, MessageCircleIcon, ClipboardListIcon, UsersIcon, SettingsIcon, ChevronLeftIcon, ChevronRightIcon, DotsVerticalIcon } from './Icons';
 import { setActiveNav, setActiveProject } from '../store/uiSlice';
 import AddProjectModal from './AddProjectModal';
 import WriteMessageModal from './WriteMessageModal';
@@ -109,18 +109,28 @@ export default function Sidebar() {
       </nav>
 
       {!collapsed && (
-        <div className="p-3 border-t border-gray-100">
-          <div className="bg-gray-50 rounded-xl p-4">
-            <div className="flex gap-2 mb-2">
-              <LightbulbIcon className="w-5 h-5 shrink-0 text-amber-500" />
-              <p className="text-sm text-gray-600">
-                We don't have any notice for you, till then you can share your thoughts with your
-                peers.
-              </p>
+        <div className="mt-8 mb-4 mx-4">
+          <div className="relative bg-[#F5F5F5] rounded-[16px] p-4 pt-5 pb-5 flex flex-col items-center text-center">
+            <div className="absolute -top-5 left-1/2 -translate-x-1/2">
+              <div className="relative flex items-center justify-center">
+                <div className="absolute w-8 h-8 bg-[#FBCB22] blur-[12px] opacity-80 rounded-full"></div>
+                <div className="relative z-10 w-6 h-6 flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
+                    <path d="M12 2C8.134 2 5 5.134 5 9C5 11.385 6.195 13.488 8 14.732V17C8 17.552 8.448 18 9 18H15C15.552 18 16 17.552 16 17V14.732C17.805 13.488 19 11.385 19 9C19 5.134 15.866 2 12 2Z" fill="#FBCB22"/>
+                    <path d="M9 19H15V20C15 20.552 14.552 21 14 21H10C9.448 21 9 20.552 9 20V19Z" fill="#EAAA08"/>
+                    <path d="M10 22H14V22.5C14 23.328 13.328 24 12.5 24H11.5C10.672 24 10 23.328 10 22.5V22Z" fill="#D97706"/>
+                  </svg>
+                </div>
+              </div>
             </div>
+            
+            <h3 className="text-[15px] font-medium text-black mt-2 mb-2">Thoughts Time</h3>
+            <p className="text-[13px] text-gray-500 mb-4 leading-relaxed px-1">
+              We don't have any notice for you, till then you can share your thoughts with your peers.
+            </p>
             <button
               onClick={() => setShowWriteMessage(true)}
-              className="w-full py-2 text-sm font-medium text-purple-600 bg-white border border-purple-200 rounded-lg hover:bg-purple-50"
+              className="w-full py-2.5 bg-white text-[14px] font-medium text-black rounded-xl shadow-sm hover:bg-gray-50 transition-colors"
             >
               Write a message
             </button>

@@ -5,9 +5,9 @@ import { useState } from 'react';
 import { deleteTask } from '../store/tasksSlice';
 
 const priorityStyles = {
-  low: 'bg-amber-100 text-amber-800',
-  high: 'bg-purple-100 text-purple-800',
-  completed: 'bg-green-100 text-green-800',
+  low: 'bg-[#DFA874]/20 text-[#D58D49]',
+  high: 'bg-[#D8727D]/10 text-[#D8727D]',
+  completed: 'bg-[#83C29D]/20 text-[#68B266]',
 };
 
 export default function TaskCard({ task }) {
@@ -24,13 +24,13 @@ export default function TaskCard({ task }) {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className={`bg-white rounded-lg p-4 border border-gray-200 shadow-sm cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow ${
-        isDragging ? 'opacity-90 shadow-lg ring-2 ring-purple-400 ring-dashed' : ''
+      className={`bg-white rounded-[16px] p-5 cursor-grab active:cursor-grabbing hover:shadow-md transition-all ${
+        isDragging ? 'opacity-90 shadow-2xl ring-1 ring-[#5030E5] ring-dashed rotate-[2deg] scale-105 z-50' : 'shadow-sm'
       }`}
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <span
-          className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${priorityStyles[task.priority] || priorityStyles.low}`}
+          className={`text-[12px] font-medium px-2 py-1 rounded-md shrink-0 ${priorityStyles[task.priority] || priorityStyles.low}`}
         >
           {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
         </span>
@@ -40,9 +40,13 @@ export default function TaskCard({ task }) {
               e.stopPropagation();
               setShowMenu(!showMenu);
             }}
-            className="p-1 text-gray-400 hover:text-gray-600"
+            className="p-1 text-[#0D062D] font-bold hover:text-gray-900"
           >
-            <DotsVerticalIcon className="w-5 h-5" />
+            <svg width="16" height="4" viewBox="0 0 16 4" fill="currentColor">
+              <path d="M2.5 4C3.60457 4 4.5 3.10457 4.5 2C4.5 0.89543 3.60457 0 2.5 0C1.39543 0 0.5 0.89543 0.5 2C0.5 3.10457 1.39543 4 2.5 4Z" />
+              <path d="M8 4C9.10457 4 10 3.10457 10 2C10 0.89543 9.10457 0 8 0C6.89543 0 6 0.89543 6 2C6 3.10457 6.89543 4 8 4Z" />
+              <path d="M13.5 4C14.6046 4 15.5 3.10457 15.5 2C15.5 0.89543 14.6046 0 13.5 0C12.3954 0 11.5 0.89543 11.5 2C11.5 3.10457 12.3954 4 13.5 4Z" />
+            </svg>
           </button>
           {showMenu && (
             <>
@@ -65,22 +69,22 @@ export default function TaskCard({ task }) {
           )}
         </div>
       </div>
-      <h3 className="font-semibold text-gray-800 text-sm mb-1">{task.title}</h3>
-      <p className="text-xs text-gray-500 mb-3 line-clamp-2">{task.description}</p>
+      <h3 className="font-semibold text-[#0D062D] text-[18px] mb-1">{task.title}</h3>
+      <p className="text-[12px] text-[#787486] mb-4 leading-relaxed line-clamp-2">{task.description}</p>
       <div className="flex items-center justify-between gap-2">
-        <div className="flex -space-x-2">
-          {[...Array(Math.min(task.assignees, 3))].map((_, i) => (
-            <div
+        <div className="flex -space-x-1.5 pl-1">
+          {[...Array(Math.min(task.assignees, 4))].map((_, i) => (
+             <img
               key={i}
-              className="w-6 h-6 rounded-full bg-purple-200 border-2 border-white flex items-center justify-center text-[10px] font-medium text-purple-700"
-            >
-              {String.fromCharCode(65 + (i % 26))}
-            </div>
+              src={`/avatars/avatar${(i % 4) + 1}.png`}
+              alt="Assignee"
+              className="w-[24px] h-[24px] rounded-full border-[1.5px] border-white object-cover"
+            />
           ))}
         </div>
-        <div className="flex items-center gap-3 text-xs text-gray-500">
-          <span className="flex items-center gap-1"><MessageIcon className="w-4 h-4" /> {task.commentsCount} comments</span>
-          <span className="flex items-center gap-1"><PaperclipIcon className="w-4 h-4" /> {task.filesCount} files</span>
+        <div className="flex items-center gap-3 text-[12px] font-medium text-[#787486]">
+          <span className="flex items-center gap-1.5"><MessageIcon className="w-4 h-4 text-[#787486]" /> {task.commentsCount} comments</span>
+          <span className="flex items-center gap-1.5"><PaperclipIcon className="w-4 h-4 text-[#787486]" /> {task.filesCount} files</span>
         </div>
       </div>
     </div>

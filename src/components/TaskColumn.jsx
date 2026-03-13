@@ -1,5 +1,5 @@
 import { useDroppable } from '@dnd-kit/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectTasksByStatus } from '../store/tasksSlice';
 import TaskCard from './TaskCard';
 import AddTaskModal from './AddTaskModal';
@@ -8,23 +8,25 @@ import { useState } from 'react';
 const COLUMN_CONFIG = {
   todo: {
     label: 'To Do',
-    dotColor: 'bg-purple-500',
-    borderColor: 'border-purple-500',
+    dotColor: 'bg-[#5030E5]',
+    lineColor: 'bg-[#5030E5]',
+    showAdd: true,
   },
   inProgress: {
     label: 'On Progress',
-    dotColor: 'bg-orange-400',
-    borderColor: 'border-orange-400',
+    dotColor: 'bg-[#FFA500]',
+    lineColor: 'bg-[#FFA500]',
+    showAdd: false,
   },
   done: {
     label: 'Done',
-    dotColor: 'bg-green-500',
-    borderColor: 'border-green-500',
+    dotColor: 'bg-[#76A5EA]',
+    lineColor: 'bg-[#8BC48A]',
+    showAdd: false,
   },
 };
 
 export default function TaskColumn({ status }) {
-  const dispatch = useDispatch();
   const tasks = useSelector((state) => selectTasksByStatus(state, status));
   const [showAddModal, setShowAddModal] = useState(false);
   const config = COLUMN_CONFIG[status];
@@ -37,25 +39,27 @@ export default function TaskColumn({ status }) {
     <>
       <div
         ref={setNodeRef}
-        className={`flex-shrink-0 w-80 h-full min-h-[400px] max-h-full bg-gray-50/50 rounded-xl p-4 flex flex-col overflow-hidden ${
-          isOver ? 'ring-2 ring-purple-300 ring-dashed bg-purple-50/50' : ''
+        className={`flex-shrink-0 w-[354px] h-full min-h-[400px] max-h-full bg-[#F5F5F5] rounded-[16px] p-5 flex flex-col overflow-hidden ${
+          isOver ? 'ring-2 ring-[rgba(80,48,229,0.3)] ring-dashed bg-[#F0F0F0]' : ''
         }`}
       >
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
             <span className={`w-2 h-2 rounded-full ${config.dotColor}`} />
-            <span className="font-semibold text-gray-800">{config.label}</span>
-            <span className="text-sm text-gray-400">{tasks.length}</span>
+            <span className="font-medium text-[16px] text-[#0D062D] ml-1">{config.label}</span>
+            <span className="flex items-center justify-center w-[20px] h-[20px] rounded-full bg-[#E0E0E0] text-[#625F6D] text-[12px] font-medium ml-2">{tasks.length}</span>
           </div>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="w-8 h-8 flex items-center justify-center bg-purple-600 text-white rounded-lg hover:bg-purple-700"
-          >
-            +
-          </button>
+          {config.showAdd && (
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="w-6 h-6 flex items-center justify-center bg-[rgba(80,48,229,0.08)] text-[#5030E5] rounded-[5px] hover:bg-[rgba(80,48,229,0.15)] text-[16px] font-medium transition-colors"
+            >
+              +
+            </button>
+          )}
         </div>
-        <div className={`h-0.5 ${config.borderColor} mb-4`} />
-        <div className="flex-1 min-h-0 space-y-3 overflow-y-auto overflow-x-hidden scroll-smooth">
+        <div className={`h-[3px] w-full ${config.lineColor} mb-5 rounded-full`} />
+        <div className="flex-1 min-h-0 space-y-4 overflow-y-auto overflow-x-hidden scroll-smooth pt-1 pb-2">
           {tasks.map((task) => (
             <TaskCard key={task.id} task={task} />
           ))}
