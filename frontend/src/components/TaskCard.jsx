@@ -1,6 +1,6 @@
 import { useDraggable } from '@dnd-kit/core';
 import { MessageIcon, PaperclipIcon, DotsVerticalIcon } from './Icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { deleteTask, moveTask } from '../store/tasksSlice';
 
@@ -12,6 +12,7 @@ const priorityStyles = {
 
 export default function TaskCard({ task }) {
   const dispatch = useDispatch();
+  const viewMode = useSelector((state) => state.ui?.viewMode) || 'kanban';
   const [showMenu, setShowMenu] = useState(false);
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
@@ -29,11 +30,18 @@ export default function TaskCard({ task }) {
       }`}
     >
       <div className="flex items-start justify-between gap-2 mb-2">
-        <span
-          className={`text-[12px] font-medium px-2 py-1 rounded-md shrink-0 ${priorityStyles[task.priority] || priorityStyles.low}`}
-        >
-          {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-        </span>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span
+            className={`text-[12px] font-medium px-2 py-1 rounded-md shrink-0 ${priorityStyles[task.priority] || priorityStyles.low}`}
+          >
+            {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+          </span>
+          {viewMode === 'grid' && (
+            <span className="text-[12px] font-medium px-2 py-1 rounded-md shrink-0 bg-gray-100 text-gray-600">
+              {task.status === 'todo' ? 'To Do' : task.status === 'inProgress' ? 'On Progress' : 'Done'}
+            </span>
+          )}
+        </div>
         <div className="relative">
           <button
             onClick={(e) => {
