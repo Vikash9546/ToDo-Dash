@@ -1,138 +1,58 @@
-import { SignJWT, jwtVerify } from 'jose';
-
-// Secret key for signing JWTs (in production, this would be on the server)
-const SECRET = new TextEncoder().encode('project-m-jwt-secret-key-2026');
-const ISSUER = 'project-m';
-const AUDIENCE = 'project-m-app';
-
-// Token durations
-const ACCESS_TOKEN_EXPIRY = '1h';   // 1 hour
-const REFRESH_TOKEN_EXPIRY = '7d';  // 7 days
-
-// Simulated user database
-const USERS_DB = [
-  {
-    id: 'usr_001',
-    email: 'palak@example.com',
-    password: 'password123',
-    name: 'Palak Jain',
-    role: 'Project Manager',
-    avatar: 'PJ',
-  },
-  {
-    id: 'usr_002',
-    email: 'vikash@example.com',
-    password: 'password123',
-    name: 'Vikash Kumar',
-    role: 'Full Stack Developer',
-    avatar: 'VK',
-  },
-];
-
-/**
- * Generate an access token for a user
- */
-export async function generateAccessToken(user) {
-  const token = await new SignJWT({
-    sub: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-    type: 'access',
-  })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setIssuer(ISSUER)
-    .setAudience(AUDIENCE)
-    .setExpirationTime(ACCESS_TOKEN_EXPIRY)
-    .sign(SECRET);
-
-  return token;
-}
-
-/**
- * Generate a refresh token for a user
- */
-export async function generateRefreshToken(user) {
-  const token = await new SignJWT({
-    sub: user.id,
-    type: 'refresh',
-  })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setIssuer(ISSUER)
-    .setAudience(AUDIENCE)
-    .setExpirationTime(REFRESH_TOKEN_EXPIRY)
-    .sign(SECRET);
-
-  return token;
-}
-
-/**
- * Verify and decode a JWT token
- * Returns the payload if valid, throws if invalid/expired
- */
-export async function verifyToken(token) {
-  try {
-    const { payload } = await jwtVerify(token, SECRET, {
-      issuer: ISSUER,
-      audience: AUDIENCE,
-    });
-    return payload;
-  } catch (error) {
-    throw new Error(
-      error.code === 'ERR_JWT_EXPIRED' ? 'TOKEN_EXPIRED' : 'TOKEN_INVALID'
-    );
-  }
-}
+const API_URL = 'http://localhost:4000/api';
 
 /**
  * Authenticate user with email/password and return tokens
  */
 export async function authenticateUser(email, password) {
-  // Simulate server-side lookup
-  const user = USERS_DB.find(
-    (u) => u.email === email && u.password === password
-  );
-
-  if (!user) {
-    throw new Error('Invalid email or password. Use demo credentials.');
+  const res = await fetch(`${API_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || 'Login failed');
   }
-
-  const accessToken = await generateAccessToken(user);
-  const refreshToken = await generateRefreshToken(user);
-
-  // Return user info (without password) + tokens
-  const { password: _, ...safeUser } = user;
-  return {
-    user: safeUser,
-    accessToken,
-    refreshToken,
-  };
+  return data;
 }
 
 /**
  * Refresh the access token using a valid refresh token
  */
 export async function refreshAccessToken(refreshToken) {
-  const payload = await verifyToken(refreshToken);
+  const res = await fetch(`${API_URL}/auth/refresh`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refreshToken }),
+  });
 
-  if (payload.type !== 'refresh') {
-    throw new Error('TOKEN_INVALID');
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || 'TOKEN_INVALID');
   }
+  return data;
+}
 
-  // Find user by ID from the refresh token
-  const user = USERS_DB.find((u) => u.id === payload.sub);
-  if (!user) {
-    throw new Error('USER_NOT_FOUND');
+/**
+ * Verify and decode a JWT token via the backend
+ */
+export async function verifyToken(token) {
+  const res = await fetch(`${API_URL}/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || 'TOKEN_INVALID');
   }
-
-  const newAccessToken = await generateAccessToken(user);
-  const { password: _, ...safeUser } = user;
-
+  
+  // Create a payload-like structure to satisfy the current Redux slice format
   return {
-    user: safeUser,
-    accessToken: newAccessToken,
+    sub: data.user.id,
+    email: data.user.email,
+    name: data.user.name,
+    role: data.user.role,
   };
 }
 

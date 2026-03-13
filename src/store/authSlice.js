@@ -6,7 +6,6 @@ import {
   storeTokens,
   getStoredTokens,
   clearStoredTokens,
-  isTokenExpiringSoon,
 } from '../utils/jwt';
 
 // Async thunk: Login with email/password → returns JWT tokens
@@ -77,7 +76,7 @@ export const validateSession = createAsyncThunk(
 // Async thunk: Refresh access token
 export const refreshSession = createAsyncThunk(
   'auth/refreshSession',
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const { refreshToken } = getStoredTokens();
       if (!refreshToken) {

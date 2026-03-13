@@ -7,7 +7,7 @@ import Login from './components/Login';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import KanbanBoard from './components/KanbanBoard';
-import ScrollButtons from './components/ScrollButtons';
+
 import MessagesPage from './components/MessagesPage';
 import TasksPage from './components/TasksPage';
 import MembersPage from './components/MembersPage';
@@ -46,7 +46,7 @@ function Dashboard() {
         >
           {renderPage()}
         </main>
-        {!isFullHeight && <ScrollButtons scrollContainerRef={mainScrollRef} />}
+
       </div>
     </div>
   );
