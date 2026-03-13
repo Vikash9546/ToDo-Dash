@@ -7,6 +7,7 @@ import uiReducer from './uiSlice';
 import messagesReducer from './messagesSlice';
 import membersReducer from './membersSlice';
 import { socketMiddleware } from './socketMiddleware';
+import { activityMiddleware } from './activityMiddleware';
 
 const persistConfig = {
   key: 'root',
@@ -31,7 +32,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
       },
-    }).concat(socketMiddleware),
+    }).concat(socketMiddleware, activityMiddleware),
 });
 
 export const persistor = persistStore(store);

@@ -14,6 +14,7 @@ export default function Header() {
   const search = useSelector((state) => state.tasks.filter?.search || '');
   const user = useSelector((state) => state.auth?.user);
   const notifications = useSelector((state) => state.ui?.notifications) || [];
+  const hasUnread = notifications.some(n => !n.read);
 
   return (
     <header className="h-16 flex items-center justify-between px-6 bg-white border-b border-gray-100">
@@ -83,10 +84,12 @@ export default function Header() {
           <button
             onClick={() => { setShowNotifications(!showNotifications); setShowCalendar(false); setShowHelp(false); }}
             className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg relative"
-title="Notifications"
+            title="Notifications"
           >
             <BellIcon className="w-5 h-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+            {hasUnread && (
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 border border-white rounded-full" />
+            )}
           </button>
           {showNotifications && (
             <>
