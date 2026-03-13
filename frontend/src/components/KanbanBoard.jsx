@@ -5,6 +5,7 @@ import {
   useSensor,
   useSensors,
   pointerWithin,
+  DragOverlay,
 } from '@dnd-kit/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { moveTask, setFilter, selectFilteredTasks } from '../store/tasksSlice';
@@ -24,6 +25,8 @@ export default function KanbanBoard() {
   const [showInvite, setShowInvite] = useState(false);
   const [showAttachments, setShowAttachments] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [activeId, setActiveId] = useState(null);
+  const activeTask = allTasks.find(t => t.id === activeId);
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -37,7 +40,12 @@ export default function KanbanBoard() {
     })
   );
 
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
   const handleDragEnd = (event) => {
+    setActiveId(null);
     const { active, over } = event;
     if (!over || active.id === over.id) return;
     const taskId = active.id;
@@ -206,6 +214,7 @@ export default function KanbanBoard() {
         <DndContext
           sensors={sensors}
           collisionDetection={pointerWithin}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <div className="flex gap-[15px] overflow-x-auto overflow-y-hidden pb-4 scroll-smooth items-stretch min-h-[calc(100vh-12rem)]">
@@ -213,6 +222,9 @@ export default function KanbanBoard() {
             <TaskColumn status="inProgress" />
             <TaskColumn status="done" />
           </div>
+          <DragOverlay>
+            {activeTask ? <TaskCard task={activeTask} isOverlay /> : null}
+          </DragOverlay>
         </DndContext>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-4 overflow-y-auto content-start min-h-[calc(100vh-12rem)]">

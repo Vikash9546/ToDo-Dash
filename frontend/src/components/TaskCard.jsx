@@ -10,7 +10,7 @@ const priorityStyles = {
   completed: 'bg-[#83C29D]/20 text-[#68B266]',
 };
 
-export default function TaskCard({ task }) {
+export default function TaskCard({ task, isOverlay }) {
   const dispatch = useDispatch();
   const viewMode = useSelector((state) => state.ui?.viewMode) || 'kanban';
   const [showMenu, setShowMenu] = useState(false);
@@ -18,17 +18,23 @@ export default function TaskCard({ task }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: task.id,
     data: { task },
+    disabled: isOverlay,
   });
 
   return (
     <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      className={`bg-white rounded-[16px] p-5 cursor-grab active:cursor-grabbing hover:shadow-md transition-all ${
-        isDragging ? 'opacity-90 shadow-2xl ring-1 ring-[#5030E5] ring-dashed rotate-[2deg] scale-105 z-50' : 'shadow-sm'
+      ref={!isOverlay ? setNodeRef : undefined}
+      {...(!isOverlay ? listeners : {})}
+      {...(!isOverlay ? attributes : {})}
+      className={`rounded-[16px] p-5 w-auto transition-all ${
+        isOverlay
+          ? 'bg-white shadow-[0px_20px_40px_rgba(80,48,229,0.15)] rotate-[3deg] scale-105 z-50 cursor-grabbing'
+          : isDragging
+          ? 'bg-[rgba(80,48,229,0.05)] border-[1.5px] border-dashed border-[#5030E5] shadow-none cursor-grabbing'
+          : 'bg-white shadow-sm hover:shadow-md cursor-grab active:cursor-grabbing'
       }`}
     >
+      <div className={`transition-opacity duration-200 ${isDragging && !isOverlay ? 'opacity-0' : 'opacity-100'}`}>
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex items-center gap-2 flex-wrap">
           <span
@@ -118,6 +124,7 @@ export default function TaskCard({ task }) {
         <div className="flex items-center gap-3 text-[12px] font-medium text-[#787486]">
           <span className="flex items-center gap-1.5"><MessageIcon className="w-4 h-4 text-[#787486]" /> {task.commentsCount} comments</span>
           <span className="flex items-center gap-1.5"><PaperclipIcon className="w-4 h-4 text-[#787486]" /> {task.filesCount} files</span>
+        </div>
         </div>
       </div>
     </div>
