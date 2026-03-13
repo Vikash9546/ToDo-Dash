@@ -59,13 +59,15 @@ export default function Sidebar() {
             <button
               key={item.label}
               onClick={() => dispatch(setActiveNav(item.label))}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg mb-1 text-left ${
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl mb-1 text-left text-[15px] font-medium transition-colors ${
                 activeNav === item.label
-                  ? 'bg-purple-50 text-purple-600 font-medium'
-                  : 'text-gray-600 hover:bg-gray-50'
+                  ? 'bg-[#5030E5]/10 text-[#5030E5] font-semibold text-[15px]'
+                  : 'text-[#787486] hover:bg-gray-50'
               }`}
             >
-              <span className="w-5 flex items-center justify-center shrink-0"><Icon className="w-5 h-5" /></span>
+              <span className="w-6 flex items-center justify-center shrink-0">
+                <Icon className={`w-5 h-5 ${activeNav === item.label ? 'text-[#5030E5]' : 'text-[#787486]'}`} />
+              </span>
               {!collapsed && <span>{item.label}</span>}
             </button>
           );
@@ -92,15 +94,15 @@ export default function Sidebar() {
             <button
               key={name}
               onClick={() => dispatch(setActiveProject(name))}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg mb-1 text-left ${
-                activeProject === name ? 'bg-purple-50 text-purple-600 font-medium' : 'text-gray-600 hover:bg-gray-50'
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl mb-1 text-left text-[15px] font-medium transition-colors ${
+                activeProject === name ? 'bg-[#5030E5]/10 text-[#0D062D] font-semibold' : 'text-[#787486] hover:bg-gray-50'
               }`}
             >
               <span className={`w-2 h-2 rounded-full shrink-0 ${projectColors[name] ?? 'bg-gray-400'}`} />
               {!collapsed && (
                 <>
                   <span className="flex-1 truncate">{name}</span>
-                  <DotsVerticalIcon className="w-4 h-4 text-gray-400 shrink-0" />
+                  {activeProject === name && <DotsVerticalIcon className="w-4 h-4 text-[#0D062D] shrink-0 font-bold" />}
                 </>
               )}
             </button>
