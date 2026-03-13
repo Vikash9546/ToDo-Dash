@@ -57,132 +57,148 @@ export default function KanbanBoard() {
   return (
     <div className="min-h-full flex flex-col p-6">
       {/* Project header */}
-      <div className="flex-shrink-0 flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-gray-900">{activeProject}</h1>
-          <button
-            onClick={() => setShowAttachments(!showAttachments)}
-            className="p-1.5 text-purple-400 hover:text-purple-600 rounded-md hover:bg-purple-50 transition-colors"
-            title="Attachments"
-          >
-            <PaperclipIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={copyLink}
-            className="p-1.5 text-purple-400 hover:text-purple-600 rounded-md hover:bg-purple-50 transition-colors"
-            title="Copy link"
-          >
-            <LinkIcon className="w-5 h-5" />
-          </button>
+      <div className="flex-shrink-0 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2 mt-2">
+        <div className="flex items-center gap-4">
+          <h1 className="text-[46px] font-semibold text-[#0D062D]">{activeProject}</h1>
+          <div className="flex items-center gap-2 mt-2">
+            <button
+              className="flex items-center justify-center w-[25px] h-[25px] bg-[#5030E5]/10 rounded-[5px] text-[#5030E5] hover:bg-[#5030E5]/20 transition-colors"
+              title="Edit"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+              </svg>
+            </button>
+            <button
+              onClick={copyLink}
+              className="flex items-center justify-center w-[25px] h-[25px] bg-[#5030E5]/10 rounded-[5px] text-[#5030E5] hover:bg-[#5030E5]/20 transition-colors"
+              title="Copy link"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+              </svg>
+            </button>
+            {copied && <span className="text-[12px] text-[#5030E5] font-medium absolute translate-x-16">Copied!</span>}
+          </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {/* Invite */}
           <button
             onClick={() => setShowInvite(true)}
-            className="flex items-center gap-1.5 text-purple-600 font-medium text-sm hover:text-purple-700 transition-colors"
+            className="flex items-center gap-2 text-[#5030E5] font-medium text-[16px] hover:opacity-80 transition-opacity"
           >
-            <span className="flex items-center justify-center w-5 h-5 rounded-full border-2 border-purple-600 text-xs font-bold leading-none">+</span>
+            <span className="flex items-center justify-center w-[18px] h-[18px] bg-[#5030E5]/15 rounded-[5px] text-[12px] font-bold">+</span>
             Invite
           </button>
-          {/* Avatars - stacked with real photos */}
-          <div className="flex -space-x-2.5 ml-1">
-            <img src="/avatars/avatar1.png" alt="Team member" className="w-9 h-9 rounded-full border-2 border-white object-cover" />
-            <img src="/avatars/avatar2.png" alt="Team member" className="w-9 h-9 rounded-full border-2 border-white object-cover" />
-            <img src="/avatars/avatar3.png" alt="Team member" className="w-9 h-9 rounded-full border-2 border-white object-cover" />
-            <img src="/avatars/avatar4.png" alt="Team member" className="w-9 h-9 rounded-full border-2 border-white object-cover" />
-            <div className="w-9 h-9 rounded-full bg-[#fce7f3] border-2 border-white flex items-center justify-center text-xs font-semibold text-pink-600">
+          {/* Avatars */}
+          <div className="flex -space-x-2 pl-2">
+            <img src="/avatars/avatar1.png" alt="Team member" className="w-[38px] h-[38px] rounded-full border-[2px] border-white object-cover" />
+            <img src="/avatars/avatar2.png" alt="Team member" className="w-[38px] h-[38px] rounded-full border-[2px] border-white object-cover" />
+            <img src="/avatars/avatar3.png" alt="Team member" className="w-[38px] h-[38px] rounded-full border-[2px] border-white object-cover" />
+            <img src="/avatars/avatar4.png" alt="Team member" className="w-[38px] h-[38px] rounded-full border-[2px] border-white object-cover" />
+            <div className="w-[38px] h-[38px] rounded-full bg-[#F4D7DA] border-[2px] border-white flex items-center justify-center text-[15px] font-medium text-[#D25B68] tracking-tight">
               +2
             </div>
           </div>
-          {/* Share */}
+        </div>
+      </div>
+
+      {/* Second Row: Filters and Views */}
+      <div className="flex-shrink-0 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 mt-6">
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <button
+              onClick={() => setShowFilterMenu(!showFilterMenu)}
+              className="flex items-center gap-2 px-4 py-2 bg-white text-[16px] font-medium text-[#787486] border border-[#787486]/40 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <FilterIcon className="w-4 h-4 text-[#787486]" /> Filter <ChevronDownIcon className="w-4 h-4 text-[#787486]" />
+            </button>
+            {showFilterMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setShowFilterMenu(false)}
+                />
+                <div className="absolute left-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20 min-w-[180px]">
+                  <p className="px-4 py-1 text-xs font-semibold text-gray-500 uppercase">
+                    Priority
+                  </p>
+                  {priorities.map((p) => (
+                    <button
+                      key={p.value ?? 'all'}
+                      onClick={() => {
+                        dispatch(setFilter({ priority: p.value }));
+                        setShowFilterMenu(false);
+                      }}
+                      className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
+                        filter?.priority === p.value ? 'text-purple-600 font-medium' : 'text-gray-700'
+                      }`}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+          <button
+            onClick={() => dispatch(setFilter({ dateFilter: filter?.dateFilter === 'today' ? null : 'today' }))}
+            className={`flex items-center gap-2 px-4 py-2 bg-white text-[16px] font-medium border rounded-lg transition-colors ${
+              filter?.dateFilter === 'today'
+                ? 'border-[#5030E5] text-[#5030E5]'
+                : 'border-[#787486]/40 text-[#787486] hover:bg-gray-50'
+            }`}
+          >
+            <CalendarIcon className="w-4 h-4" /> Today <ChevronDownIcon className="w-4 h-4 text-[#787486]" />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-4">
           <button
             onClick={copyLink}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg bg-white hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-white text-[16px] font-medium text-[#787486] border border-[#787486]/40 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="w-4 h-4 text-[#787486]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
               <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
               <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
-            {copied ? 'Copied!' : 'Share'}
+            Share
           </button>
-          {/* Vertical separator */}
-          <div className="w-px h-7 bg-gray-200" />
-          {/* List view - solid purple square */}
-          <button
-            onClick={() => dispatch(setViewMode('kanban'))}
-            className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors ${viewMode === 'kanban' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}
-            title="List view"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="5" y1="8" x2="19" y2="8" />
-              <line x1="5" y1="16" x2="19" y2="16" />
-            </svg>
-          </button>
-          {/* Grid view - 4 squares */}
-          <button
-            onClick={() => dispatch(setViewMode('grid'))}
-            className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-purple-50 text-purple-600' : 'text-gray-400 hover:bg-gray-100'}`}
-            title="Grid view"
-          >
-            <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <rect x="1" y="1" width="6" height="6" rx="1.5" />
-              <rect x="11" y="1" width="6" height="6" rx="1.5" />
-              <rect x="1" y="11" width="6" height="6" rx="1.5" />
-              <rect x="11" y="11" width="6" height="6" rx="1.5" />
-            </svg>
-          </button>
+          
+          <div className="w-px h-7 bg-[#787486]/40 mx-1" />
+          
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => dispatch(setViewMode('kanban'))}
+              className={`w-[40px] h-[40px] flex items-center justify-center rounded-lg transition-colors ${
+                viewMode === 'kanban' ? 'bg-[#5030E5] text-white' : 'bg-transparent text-[#787486] hover:bg-[#5030E5]/5'
+              }`}
+              title="List view"
+            >
+              <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="5" y1="8" x2="19" y2="8" />
+                <line x1="5" y1="16" x2="19" y2="16" />
+              </svg>
+            </button>
+            <button
+              onClick={() => dispatch(setViewMode('grid'))}
+              className={`w-[40px] h-[40px] flex items-center justify-center rounded-lg transition-colors ${
+                viewMode === 'grid' ? 'bg-[#5030E5] text-white' : 'bg-transparent text-[#787486] hover:bg-[#5030E5]/5'
+              }`}
+              title="Grid view"
+            >
+              <svg className="w-[18px] h-[18px]" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="1" y="1" width="6" height="6" rx="1.5" />
+                <rect x="11" y="1" width="6" height="6" rx="1.5" />
+                <rect x="1" y="11" width="6" height="6" rx="1.5" />
+                <rect x="11" y="11" width="6" height="6" rx="1.5" />
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
-
-      {/* Filter bar */}
-      <div className="flex-shrink-0 flex items-center gap-3 mb-6">
-        <div className="relative">
-          <button
-            onClick={() => setShowFilterMenu(!showFilterMenu)}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
-          >
-            <FilterIcon className="w-4 h-4" /> Filter <ChevronDownIcon className="w-3.5 h-3.5 text-gray-400" />
-          </button>
-          {showFilterMenu && (
-            <>
-              <div
-                className="fixed inset-0 z-10"
-                onClick={() => setShowFilterMenu(false)}
-              />
-              <div className="absolute left-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-20 min-w-[180px]">
-                <p className="px-4 py-1 text-xs font-semibold text-gray-500 uppercase">
-                  Priority
-                </p>
-                {priorities.map((p) => (
-                  <button
-                    key={p.value ?? 'all'}
-                    onClick={() => {
-                      dispatch(setFilter({ priority: p.value }));
-                      setShowFilterMenu(false);
-                    }}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
-                      filter?.priority === p.value ? 'text-purple-600 font-medium' : 'text-gray-700'
-                    }`}
-                  >
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-        <button
-          onClick={() => dispatch(setFilter({ dateFilter: filter?.dateFilter === 'today' ? null : 'today' }))}
-          className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border rounded-lg ${
-            filter?.dateFilter === 'today'
-              ? 'border-purple-500 bg-purple-50 text-purple-700'
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-          }`}
-        >
-          <CalendarIcon className="w-4 h-4" /> Today <ChevronDownIcon className="w-3.5 h-3.5 text-gray-400" />
-        </button>
       </div>
 
       {/* Kanban columns vs Grid View */}
