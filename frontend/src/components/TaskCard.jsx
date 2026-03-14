@@ -1,8 +1,8 @@
 import { useDraggable } from '@dnd-kit/core';
-import { MessageIcon, PaperclipIcon, DotsVerticalIcon, CalendarIcon } from './Icons';
+import { MessageIcon, PaperclipIcon, DotsVerticalIcon, CalendarIcon, ClipboardListIcon, ChevronDownIcon } from './Icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { deleteTask, moveTask } from '../store/tasksSlice';
+import { deleteTask, moveTask, addSubtask, toggleSubtask, deleteSubtask } from '../store/tasksSlice';
 
 const priorityStyles = {
   low: 'bg-[#DFA874]/20 text-[#D58D49]',
@@ -22,6 +22,15 @@ export default function TaskCard({ task, isOverlay }) {
   const dispatch = useDispatch();
   const viewMode = useSelector((state) => state.ui?.viewMode) || 'kanban';
   const [showMenu, setShowMenu] = useState(false);
+  const [showSubtasks, setShowSubtasks] = useState(false);
+  const [newSubtask, setNewSubtask] = useState('');
+
+  const handleAddSubtask = (e) => {
+    if (e.key === 'Enter' && newSubtask.trim()) {
+      dispatch(addSubtask({ taskId: task.id, title: newSubtask.trim() }));
+      setNewSubtask('');
+    }
+  };
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: task.id,
@@ -124,6 +133,51 @@ export default function TaskCard({ task, isOverlay }) {
       </div>
       <h3 className="font-semibold text-[#0D062D] text-[18px] mb-1">{task.title}</h3>
       <p className="text-[12px] text-[#787486] mb-4 leading-relaxed line-clamp-2">{task.description}</p>
+      
+      {/* Subtasks Section */}
+      <div className="mb-4" onPointerDown={(e) => e.stopPropagation()}> 
+        <button 
+          onClick={(e) => { e.preventDefault(); setShowSubtasks(!showSubtasks); }}
+          className="text-[12px] font-medium text-[#787486] flex items-center gap-1 hover:text-[#5030E5] transition-colors"
+        >
+          <ClipboardListIcon className="w-3.5 h-3.5" /> 
+          Subtasks {task.subtasks?.length > 0 && `(${task.subtasks.filter(st => st.completed).length}/${task.subtasks.length})`}
+          <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${showSubtasks ? 'rotate-180' : ''}`} />
+        </button>
+        
+        {showSubtasks && (
+          <div className="mt-2 space-y-1.5">
+            {task.subtasks?.map(st => (
+              <div key={st.id} className="flex items-start gap-2 group">
+                <input 
+                  type="checkbox" 
+                  checked={st.completed}
+                  onChange={() => dispatch(toggleSubtask({ taskId: task.id, subtaskId: st.id }))}
+                  className="mt-0.5 w-3.5 h-3.5 rounded border-gray-300 text-[#5030E5] focus:ring-[#5030E5] cursor-pointer"
+                />
+                <span className={`text-[12px] flex-1 leading-tight ${st.completed ? 'text-gray-400 line-through' : 'text-gray-700'}`}>
+                  {st.title}
+                </span>
+                <button 
+                  onClick={() => dispatch(deleteSubtask({ taskId: task.id, subtaskId: st.id }))}
+                  className="opacity-0 group-hover:opacity-100 text-red-500 hover:bg-red-50 p-0.5 rounded transition-opacity"
+                >
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+              </div>
+            ))}
+            <input 
+              type="text" 
+              placeholder="+ Add subtask (press Enter)..."
+              value={newSubtask}
+              onChange={(e) => setNewSubtask(e.target.value)}
+              onKeyDown={handleAddSubtask}
+              className="w-full text-[12px] mt-1 bg-gray-50 border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:border-[#5030E5] transition-colors"
+            />
+          </div>
+        )}
+      </div>
+
       <div className="flex items-center justify-between gap-2">
         <div className="flex -space-x-1.5 pl-1">
           {[...Array(Math.min(task.assignees, 4))].map((_, i) => (

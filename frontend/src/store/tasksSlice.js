@@ -14,6 +14,10 @@ const initialState = {
       commentsCount: 12,
       filesCount: 0,
       dueDate: null,
+      subtasks: [
+        { id: '1-1', title: 'Gather requirements', completed: true },
+        { id: '1-2', title: 'Initial concept draft', completed: false },
+      ],
     },
     {
       id: '2',
@@ -111,6 +115,7 @@ const tasksSlice = createSlice({
         commentsCount: 0,
         filesCount: 0,
         dueDate,
+        subtasks: [],
       });
     },
     moveTask: (state, action) => {
@@ -135,10 +140,40 @@ const tasksSlice = createSlice({
     replaceTasks: (state, action) => {
       state.tasks = action.payload;
     },
+    addSubtask: (state, action) => {
+      const { taskId, title } = action.payload;
+      const task = state.tasks.find((t) => t.id === taskId);
+      if (task) {
+        if (!task.subtasks) task.subtasks = [];
+        task.subtasks.push({
+          id: generateId(),
+          title,
+          completed: false,
+        });
+      }
+    },
+    toggleSubtask: (state, action) => {
+      const { taskId, subtaskId } = action.payload;
+      const task = state.tasks.find((t) => t.id === taskId);
+      if (task && task.subtasks) {
+        const subtask = task.subtasks.find((st) => st.id === subtaskId);
+        if (subtask) subtask.completed = !subtask.completed;
+      }
+    },
+    deleteSubtask: (state, action) => {
+      const { taskId, subtaskId } = action.payload;
+      const task = state.tasks.find((t) => t.id === taskId);
+      if (task && task.subtasks) {
+        task.subtasks = task.subtasks.filter((st) => st.id !== subtaskId);
+      }
+    },
   },
 });
 
-export const { addTask, moveTask, updateTask, deleteTask, setFilter, replaceTasks } = tasksSlice.actions;
+export const { 
+  addTask, moveTask, updateTask, deleteTask, setFilter, replaceTasks,
+  addSubtask, toggleSubtask, deleteSubtask
+} = tasksSlice.actions;
 
 const selectTasksState = (state) => state.tasks;
 
