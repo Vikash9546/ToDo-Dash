@@ -2,7 +2,6 @@
 
 A high-performance, real-time task management dashboard built with React 19, Node.js, and Socket.IO. Project M. provides a seamless, collaborative experience for teams to manage projects using a Kanban board, messaging system, and member management.
 
-![Project Preview](https://github.com/Vikash9546/ToDo-Dash/raw/main/preview.png)
 
 ## 🚀 Key Features
 
