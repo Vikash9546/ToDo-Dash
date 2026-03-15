@@ -1,8 +1,8 @@
 import { useDraggable } from '@dnd-kit/core';
-import { MessageIcon, PaperclipIcon, DotsVerticalIcon, CalendarIcon, ClipboardListIcon, ChevronDownIcon, TagIcon } from './Icons';
+import { MessageIcon, PaperclipIcon, DotsVerticalIcon, CalendarIcon, ClipboardListIcon, ChevronDownIcon, TagIcon, ClockIcon } from './Icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { deleteTask, moveTask, addSubtask, toggleSubtask, deleteSubtask, addCustomField, removeCustomField } from '../store/tasksSlice';
+import { deleteTask, moveTask, addSubtask, toggleSubtask, deleteSubtask, addCustomField, removeCustomField, addComment } from '../store/tasksSlice';
 
 const priorityStyles = {
   low: 'bg-[#DFA874]/20 text-[#D58D49]',
@@ -27,6 +27,8 @@ export default function TaskCard({ task, isOverlay }) {
   const [showAddField, setShowAddField] = useState(false);
   const [newFieldLabel, setNewFieldLabel] = useState('');
   const [newFieldValue, setNewFieldValue] = useState('');
+  const [showHistory, setShowHistory] = useState(false);
+  const [newComment, setNewComment] = useState('');
 
   const handleAddField = () => {
     if (newFieldLabel.trim() && newFieldValue.trim()) {
@@ -35,6 +37,19 @@ export default function TaskCard({ task, isOverlay }) {
       setNewFieldValue('');
       setShowAddField(false);
     }
+  };
+
+  const handleAddComment = (e) => {
+    if (e.key === 'Enter' && newComment.trim()) {
+      dispatch(addComment({ taskId: task.id, comment: newComment.trim() }));
+      setNewComment('');
+    }
+  };
+
+  const formatTimestamp = (ts) => {
+    if (!ts) return '';
+    const date = new Date(ts);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ', ' + date.toLocaleDateString();
   };
 
   const handleAddSubtask = (e) => {
@@ -235,6 +250,42 @@ export default function TaskCard({ task, isOverlay }) {
             >
               Add Field
             </button>
+          </div>
+        )}
+      </div>
+
+      {/* Activity Log Section */}
+      <div className="mb-4" onPointerDown={(e) => e.stopPropagation()}>
+        <button 
+          onClick={(e) => { e.preventDefault(); setShowHistory(!showHistory); }}
+          className="text-[12px] font-medium text-[#787486] flex items-center gap-1 hover:text-[#5030E5] transition-colors"
+        >
+          <ClockIcon className="w-3.5 h-3.5" /> 
+          Activity Log {task.history?.length > 0 && `(${task.history.length})`}
+          <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${showHistory ? 'rotate-180' : ''}`} />
+        </button>
+
+        {showHistory && (
+          <div className="mt-2 p-3 bg-gray-50/50 rounded-lg border border-gray-100 space-y-3 max-h-[200px] overflow-y-auto custom-scrollbar">
+            {task.history?.slice().reverse().map(entry => (
+              <div key={entry.id} className="flex flex-col gap-0.5 border-l-2 border-[#5030E5]/20 pl-2 ml-1">
+                <span className="text-[11px] text-gray-700 font-medium">{entry.text}</span>
+                <span className="text-[9px] text-gray-400">{formatTimestamp(entry.timestamp)}</span>
+              </div>
+            ))}
+            <div className="pt-1">
+              <input 
+                type="text" 
+                placeholder="Add a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                onKeyDown={handleAddComment}
+                className="w-full text-[11px] bg-white border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:border-[#5030E5] transition-colors shadow-sm"
+              />
+            </div>
+            {(!task.history || task.history.length === 0) && (
+              <p className="text-[11px] text-gray-400 italic">No activity yet.</p>
+            )}
           </div>
         )}
       </div>

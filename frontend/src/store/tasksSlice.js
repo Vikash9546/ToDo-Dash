@@ -117,20 +117,40 @@ const tasksSlice = createSlice({
         dueDate,
         subtasks: [],
         customFields: action.payload.customFields || [],
+        history: [{ id: generateId(), type: 'created', text: `Task created`, timestamp: new Date().toISOString() }],
       });
     },
     moveTask: (state, action) => {
       const { taskId, newStatus } = action.payload;
       const task = state.tasks.find((t) => t.id === taskId);
       if (task) {
+        const oldStatus = task.status;
         task.status = newStatus;
         if (newStatus === 'done') task.priority = 'completed';
+        
+        if (!task.history) task.history = [];
+        const statusLabels = { todo: 'To Do', inProgress: 'On Progress', done: 'Done' };
+        task.history.push({
+          id: generateId(),
+          type: 'status_change',
+          text: `Status changed from ${statusLabels[oldStatus] || oldStatus} to ${statusLabels[newStatus] || newStatus}`,
+          timestamp: new Date().toISOString()
+        });
       }
     },
     updateTask: (state, action) => {
       const { id, ...updates } = action.payload;
       const task = state.tasks.find((t) => t.id === id);
-      if (task) Object.assign(task, updates);
+      if (task) {
+        Object.assign(task, updates);
+        if (!task.history) task.history = [];
+        task.history.push({
+          id: generateId(),
+          type: 'update',
+          text: `Task details updated`,
+          timestamp: new Date().toISOString()
+        });
+      }
     },
     deleteTask: (state, action) => {
       state.tasks = state.tasks.filter((t) => t.id !== action.payload);
@@ -183,13 +203,28 @@ const tasksSlice = createSlice({
         task.customFields = task.customFields.filter((f) => f.id !== fieldId);
       }
     },
+    addComment: (state, action) => {
+      const { taskId, comment } = action.payload;
+      const task = state.tasks.find((t) => t.id === taskId);
+      if (task) {
+        if (!task.history) task.history = [];
+        task.history.push({
+          id: generateId(),
+          type: 'comment',
+          text: `Comment added: "${comment}"`,
+          timestamp: new Date().toISOString()
+        });
+        task.commentsCount = (task.commentsCount || 0) + 1;
+      }
+    },
   },
 });
 
 export const { 
   addTask, moveTask, updateTask, deleteTask, setFilter, replaceTasks,
   addSubtask, toggleSubtask, deleteSubtask,
-  addCustomField, removeCustomField
+  addCustomField, removeCustomField,
+  addComment
 } = tasksSlice.actions;
 
 const selectTasksState = (state) => state.tasks;
