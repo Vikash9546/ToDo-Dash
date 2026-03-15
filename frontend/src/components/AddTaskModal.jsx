@@ -20,16 +20,39 @@ export default function AddTaskModal({ isOpen, onClose, defaultStatus }) {
   const [status, setStatus] = useState(defaultStatus || 'todo');
   const [priority, setPriority] = useState('low');
   const [dueDate, setDueDate] = useState('');
+  const [customFields, setCustomFields] = useState([]);
+  const [fieldLabel, setFieldLabel] = useState('');
+  const [fieldValue, setFieldValue] = useState('');
+
+  const addField = () => {
+    if (fieldLabel.trim() && fieldValue.trim()) {
+      setCustomFields([...customFields, { label: fieldLabel.trim(), value: fieldValue.trim() }]);
+      setFieldLabel('');
+      setFieldValue('');
+    }
+  };
+
+  const removeField = (index) => {
+    setCustomFields(customFields.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title.trim()) return;
-    dispatch(addTask({ title: title.trim(), description: description.trim(), status, priority, dueDate: dueDate || null }));
+    dispatch(addTask({ 
+      title: title.trim(), 
+      description: description.trim(), 
+      status, 
+      priority, 
+      dueDate: dueDate || null,
+      customFields
+    }));
     setTitle('');
     setDescription('');
     setStatus(defaultStatus || 'todo');
     setPriority('low');
     setDueDate('');
+    setCustomFields([]);
     onClose();
   };
 
@@ -102,6 +125,50 @@ export default function AddTaskModal({ isOpen, onClose, defaultStatus }) {
               onChange={(e) => setDueDate(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Custom Fields (Tags)</label>
+            <div className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={fieldLabel}
+                onChange={(e) => setFieldLabel(e.target.value)}
+                placeholder="Field Label"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <input
+                type="text"
+                value={fieldValue}
+                onChange={(e) => setFieldValue(e.target.value)}
+                placeholder="Value"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <button
+                type="button"
+                onClick={addField}
+                className="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
+                title="Add Field"
+              >
+                +
+              </button>
+            </div>
+            {customFields.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {customFields.map((field, index) => (
+                  <span key={index} className="inline-flex items-center gap-1 px-2 py-1 bg-purple-50 text-purple-700 text-xs font-medium rounded-md border border-purple-100 shadow-sm">
+                    <span className="font-bold">{field.label}:</span> {field.value}
+                    <button
+                      type="button"
+                      onClick={() => removeField(index)}
+                      className="text-purple-400 hover:text-purple-600 font-bold ml-1"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
           <div className="flex gap-2 pt-2">
             <button

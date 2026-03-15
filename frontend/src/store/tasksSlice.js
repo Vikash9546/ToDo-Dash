@@ -116,6 +116,7 @@ const tasksSlice = createSlice({
         filesCount: 0,
         dueDate,
         subtasks: [],
+        customFields: action.payload.customFields || [],
       });
     },
     moveTask: (state, action) => {
@@ -167,12 +168,28 @@ const tasksSlice = createSlice({
         task.subtasks = task.subtasks.filter((st) => st.id !== subtaskId);
       }
     },
+    addCustomField: (state, action) => {
+      const { taskId, label, value } = action.payload;
+      const task = state.tasks.find((t) => t.id === taskId);
+      if (task) {
+        if (!task.customFields) task.customFields = [];
+        task.customFields.push({ id: generateId(), label, value });
+      }
+    },
+    removeCustomField: (state, action) => {
+      const { taskId, fieldId } = action.payload;
+      const task = state.tasks.find((t) => t.id === taskId);
+      if (task && task.customFields) {
+        task.customFields = task.customFields.filter((f) => f.id !== fieldId);
+      }
+    },
   },
 });
 
 export const { 
   addTask, moveTask, updateTask, deleteTask, setFilter, replaceTasks,
-  addSubtask, toggleSubtask, deleteSubtask
+  addSubtask, toggleSubtask, deleteSubtask,
+  addCustomField, removeCustomField
 } = tasksSlice.actions;
 
 const selectTasksState = (state) => state.tasks;

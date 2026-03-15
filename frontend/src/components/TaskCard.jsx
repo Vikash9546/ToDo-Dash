@@ -1,8 +1,8 @@
 import { useDraggable } from '@dnd-kit/core';
-import { MessageIcon, PaperclipIcon, DotsVerticalIcon, CalendarIcon, ClipboardListIcon, ChevronDownIcon } from './Icons';
+import { MessageIcon, PaperclipIcon, DotsVerticalIcon, CalendarIcon, ClipboardListIcon, ChevronDownIcon, TagIcon } from './Icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { deleteTask, moveTask, addSubtask, toggleSubtask, deleteSubtask } from '../store/tasksSlice';
+import { deleteTask, moveTask, addSubtask, toggleSubtask, deleteSubtask, addCustomField, removeCustomField } from '../store/tasksSlice';
 
 const priorityStyles = {
   low: 'bg-[#DFA874]/20 text-[#D58D49]',
@@ -24,6 +24,18 @@ export default function TaskCard({ task, isOverlay }) {
   const [showMenu, setShowMenu] = useState(false);
   const [showSubtasks, setShowSubtasks] = useState(false);
   const [newSubtask, setNewSubtask] = useState('');
+  const [showAddField, setShowAddField] = useState(false);
+  const [newFieldLabel, setNewFieldLabel] = useState('');
+  const [newFieldValue, setNewFieldValue] = useState('');
+
+  const handleAddField = () => {
+    if (newFieldLabel.trim() && newFieldValue.trim()) {
+      dispatch(addCustomField({ taskId: task.id, label: newFieldLabel.trim(), value: newFieldValue.trim() }));
+      setNewFieldLabel('');
+      setNewFieldValue('');
+      setShowAddField(false);
+    }
+  };
 
   const handleAddSubtask = (e) => {
     if (e.key === 'Enter' && newSubtask.trim()) {
@@ -174,6 +186,55 @@ export default function TaskCard({ task, isOverlay }) {
               onKeyDown={handleAddSubtask}
               className="w-full text-[12px] mt-1 bg-gray-50 border border-gray-200 rounded px-2 py-1.5 focus:outline-none focus:border-[#5030E5] transition-colors"
             />
+          </div>
+        )}
+      </div>
+
+      {/* Custom Fields (Tags) Section */}
+      <div className="mb-4 flex flex-wrap gap-2 items-center" onPointerDown={(e) => e.stopPropagation()}>
+        {task.customFields?.map(field => (
+          <span key={field.id} className="inline-flex items-center gap-1.5 px-2 py-1 bg-[#5030E5]/5 text-[#5030E5] text-[11px] font-semibold rounded-md border border-[#5030E5]/10 group transition-all hover:bg-[#5030E5]/10">
+            <span className="opacity-70">{field.label}:</span> {field.value}
+            <button 
+              onClick={() => dispatch(removeCustomField({ taskId: task.id, fieldId: field.id }))}
+              className="text-[#5030E5]/40 hover:text-red-500 font-bold ml-0.5"
+            >
+              ×
+            </button>
+          </span>
+        ))}
+        <button 
+          onClick={() => setShowAddField(!showAddField)}
+          className="w-6 h-6 flex items-center justify-center rounded-md border border-dashed border-gray-300 text-gray-400 hover:border-[#5030E5] hover:text-[#5030E5] transition-all"
+          title="Add Custom Field"
+        >
+          {showAddField ? '×' : '+'}
+        </button>
+
+        {showAddField && (
+          <div className="w-full mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200 flex flex-col gap-2">
+            <div className="flex gap-2">
+              <input 
+                type="text" 
+                placeholder="Field (e.g. Type)"
+                value={newFieldLabel}
+                onChange={(e) => setNewFieldLabel(e.target.value)}
+                className="flex-1 text-[11px] px-2 py-1 border rounded bg-white focus:outline-none focus:ring-1 focus:ring-[#5030E5]"
+              />
+              <input 
+                type="text" 
+                placeholder="Value"
+                value={newFieldValue}
+                onChange={(e) => setNewFieldValue(e.target.value)}
+                className="flex-1 text-[11px] px-2 py-1 border rounded bg-white focus:outline-none focus:ring-1 focus:ring-[#5030E5]"
+              />
+            </div>
+            <button 
+              onClick={handleAddField}
+              className="w-full bg-[#5030E5] text-white text-[11px] font-bold py-1.5 rounded hover:bg-[#4020D5] transition-colors"
+            >
+              Add Field
+            </button>
           </div>
         )}
       </div>
