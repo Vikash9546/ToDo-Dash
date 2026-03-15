@@ -1,4 +1,4 @@
-# Project M. — Modern Kanban Task Dashboard
+# Modern Kanban Task Dashboard
 
 A high-performance, real-time task management dashboard built with React 19, Node.js, and Socket.IO. Project M. provides a seamless, collaborative experience for teams to manage projects using a Kanban board, messaging system, and member management.
 
