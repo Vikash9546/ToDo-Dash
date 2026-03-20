@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:4000/api';
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? `${window.location.origin}/api` : 'http://localhost:4000/api');
 
 /**
  * Authenticate user with email/password and return tokens

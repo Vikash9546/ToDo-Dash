@@ -4,7 +4,8 @@ let socket;
 
 export const socketMiddleware = (store) => {
   // Connect to the Socket.IO server we just created
-  socket = io('http://localhost:4000');
+  const socketUrl = import.meta.env.VITE_SOCKET_URL || (import.meta.env.PROD ? window.location.origin : 'http://localhost:4000');
+  socket = io(socketUrl);
 
   // Handle receiving the initial/cached state from the server on connection
   socket.on('sync_state', (cachedTasks) => {
